@@ -18,7 +18,6 @@ class App extends Component {
         super(props);
 
         this.state = {
-            pageTitle: "Landing Page",
         };
 
     }
@@ -27,15 +26,6 @@ class App extends Component {
         return (
             <BrowserRouter>
                 <Route exact path='/' component={LandingPage}/>
-                <Route exact path='/season/:seasonNum' component={Season}/>
-                <Route exact path='/teams/:teamId' component={Team}/>
-                <Route exact path='/groups/:groupId' component={Group}/>
-                <Route path='/coefficients' component={Coefficients}/>
-                <Route path='/league_stats' component={Statistics}/>
-                <Route path='/teams_stats' component={Stats}/>
-                <Route path='/players_edit' component={Players}/>
-                <Route path='/players/:playerId' component={Player}/>
-                <Route path='/admin' component={Admin}/>
             </BrowserRouter>
         );
     }
