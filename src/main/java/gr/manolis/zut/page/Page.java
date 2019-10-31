@@ -2,8 +2,10 @@ package gr.manolis.zut.page;
 
 import lombok.Data;
 
-import javax.annotation.Generated;
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 
 @Data
 @Entity(name = "PAGES")
