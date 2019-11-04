@@ -1,15 +1,5 @@
 import React, {Component} from 'react';
-import {
-    Button,
-    Dialog,
-    DialogActions,
-    DialogContent,
-    DialogContentText,
-    DialogTitle,
-    Tab,
-    Tabs,
-    TextField
-} from "@material-ui/core";
+import {Button, Dialog, DialogActions, DialogContent, DialogTitle, Tab, Tabs, TextField} from "@material-ui/core";
 import AddIcon from '@material-ui/icons/Add';
 import Page from "./Page";
 
@@ -24,6 +14,7 @@ class Pages extends Component {
             tabActive: 0,
             dialogOpen: false,
             title: "",
+            titleError: true,
             description: "",
         };
     }
@@ -64,16 +55,38 @@ class Pages extends Component {
 
     insertPage = (event) => {
 
-        // TODO
-        console.log("title : " + this.state.title);
-        console.log("description : " + this.state.description);
+        fetch("/pages/", {
+            method: 'POST',
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+            body: "title=" + this.state.title + "&description=" + this.state.description
+        })
+            .then(res => res.json())
+            .then(
+                (result) => {
+                    let newPage = result;
+                    if (newPage.id === -1) {
+                        return;
+                    }
+                    let newPages = [...this.state.pages, newPage]
+                    this.setState(state => {
+                        return {
+                            ...state,
+                            pages: newPages,
+                            dialogOpen: false,
+                            tabActive: this.state.pages.length // as it has not updated yet, so that is former size
+                        }
+                    });
+        },
+        (error) => {
+            this.setState(state => {
+                return {
+                    ...state,
+                    error
+                }
+            });
+        }
+        )
 
-        this.setState(state => {
-            return {
-                ...state,
-                dialogOpen: false,
-            }
-        });
     }
 
     handleChange = (event, newValue) => {
@@ -97,33 +110,6 @@ class Pages extends Component {
             });
         }
 
-
-
-        // fetch("/rest/persist/tabs/season/" + this.props.match.params.seasonNum, {
-        //     method: 'POST',
-        //     headers: {'Content-Type': 'application/json'},
-        //     body: newValue
-        // })
-        //     .then(res => res.json())
-        //     .then(
-        //         (result) => {
-        //             this.setState(state => {
-        //                 return {
-        //                     ...state,
-        //                     tabActive: newValue,
-        //                 }
-        //             });
-                // },
-                // (error) => {
-                //     this.setState(state => {
-                //         return {
-                //             ...state,
-                //             isLoaded: true,
-                //             error
-                //         }
-                //     });
-                // }
-            // )
     }
 
     changeField = field => (event) => {
@@ -137,6 +123,7 @@ class Pages extends Component {
                 return {
                     ...state,
                     title: value,
+                    titleError: value == ""
                 }
             });
         } else {
@@ -173,6 +160,8 @@ class Pages extends Component {
                         <DialogContent>
                             <TextField
                                 autoFocus
+                                required
+                                error={this.state.titleError}
                                 margin="dense"
                                 id="title"
                                 label="title"
@@ -182,7 +171,6 @@ class Pages extends Component {
                                 onChange={this.changeField("title")}
                             />
                             <TextField
-                                autoFocus
                                 margin="dense"
                                 id="description"
                                 label="description"
@@ -195,7 +183,11 @@ class Pages extends Component {
                             />
                         </DialogContent>
                         <DialogActions>
-                            <Button onClick={this.insertPage} color="primary">
+                            <Button
+                                onClick={this.insertPage}
+                                color="primary"
+                                disabled={this.state.titleError}
+                            >
                                 Insert
                             </Button>
                             <Button onClick={this.closeDialog} color="primary">

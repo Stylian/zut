@@ -1,4 +1,5 @@
 todo
 
+tab right click on them to edit/delete
 
 tabs description/ to add/ on hover display ?
