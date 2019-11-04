@@ -123,7 +123,7 @@ class Pages extends Component {
                 return {
                     ...state,
                     title: value,
-                    titleError: value == ""
+                    titleError: value === ""
                 }
             });
         } else {
@@ -150,7 +150,7 @@ class Pages extends Component {
                     </Tabs>
                     {this.state.pages.map((page, k) => {
                         return (
-                            this.state.tabActive === k && <Page key={k}/>
+                            this.state.tabActive === k && <Page key={k} id={page.id}/>
                         )
                     })}
 
