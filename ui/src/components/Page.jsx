@@ -44,6 +44,32 @@ class Page extends Component {
             )
     }
 
+    savePage = (event) => {
+
+        // temp trial
+
+        fetch("/pages/"+this.props.id+"/components", {
+            method: 'POST',
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+            body: "top=100&left=50&height=300&width=600"
+        })
+            .then(res => res.json())
+            .then(
+                (result) => {
+
+                },
+                (error) => {
+                    this.setState(state => {
+                        return {
+                            ...state,
+                            error
+                        }
+                    });
+                }
+            )
+
+    }
+
     deletePage = (event) => {
 
         fetch("/pages/"+this.props.id, {
@@ -85,7 +111,7 @@ class Page extends Component {
                         <LockIcon/>
                         Lock view
                     </Button>
-                    <Button>
+                    <Button onClick={this.savePage}>
                         <SaveIcon/>
                         Save
                     </Button>

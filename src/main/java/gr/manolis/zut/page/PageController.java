@@ -1,5 +1,6 @@
 package gr.manolis.zut.page;
 
+import gr.manolis.zut.page.component.ComponentDTO;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,7 @@ public class PageController {
     @Autowired
     private PageRepository pageRepository;
 
+    // -------------------------------------------------- PAGES -----------------------------------------------------//
     @GetMapping("/")
     public List<PageDTO> getAllPages() {
 
@@ -68,6 +70,37 @@ public class PageController {
 
         return 1;
     }
+
+    // ----------------------------------------------- COMPONENTS --------------------------------------------------//
+
+    @ResponseBody
+    @PostMapping("/{page_id}/components")
+    public PageDTO insertComponent(
+            @PathVariable("page_id") String strPageId,
+            @RequestParam("top") int top,
+            @RequestParam("left") int left,
+            @RequestParam("height") int height,
+            @RequestParam("width") int width
+    ) {
+
+        PageDTO pageDTO = getPage(strPageId);
+
+        // this is the new component
+        ComponentDTO componentDTO = new ComponentDTO();
+        componentDTO.setLeft(left);
+        componentDTO.setTop(top);
+        componentDTO.setWidth(width);
+        componentDTO.setHeight(height);
+        componentDTO.setPage(pageDTO);
+        componentDTO.setParent(pageDTO.getContent());
+
+        pageDTO.getContent().getChildren().add(componentDTO);
+
+        PageDTO savedPageDTO = pageService.save(pageDTO);
+
+        return savedPageDTO;
+    }
+
 
 
 }

@@ -1,11 +1,9 @@
 package gr.manolis.zut.page;
 
+import gr.manolis.zut.page.component.Component;
 import lombok.Data;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Data
 @Entity(name = "PAGES")
@@ -20,5 +18,8 @@ public class Page {
 
     @Column
     private String description;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    private Component content;
 
 }

@@ -1,5 +1,20 @@
 todo
 
-tab right click on them to edit/delete
+page components issues with parent, lombok, mapper
 
-tabs description/ to add/ on hover display ?
+
+
+
+
+tab right click on them to edit/delete
+tabs description/ to add/ on hover display
+
+
+
+types of components
+panel
+graph
+table of data
+form
+button
+label
