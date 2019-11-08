@@ -16,10 +16,7 @@ public class ComponentDTO {
     private int height;
     private int width;
 
-    @ToString.Exclude
-    private List<ComponentDTO> children = new ArrayList<>();
-    private ComponentDTO parent;
-
-    @ToString.Exclude
-    private PageDTO page;
+    private List<Integer> childrenIds = new ArrayList<>();
+    private int parentId;
+    private int pageId;
 }

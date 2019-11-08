@@ -1,14 +1,20 @@
 package gr.manolis.zut.page;
 
 import gr.manolis.zut.EntityMapper;
+import gr.manolis.zut.page.component.Component;
 import gr.manolis.zut.page.component.ComponentMapper;
 import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import org.springframework.beans.factory.annotation.Autowired;
 
 @Mapper(componentModel = "spring")
-public abstract class PageMapper  implements EntityMapper<PageDTO, Page> {
+public abstract class PageMapper implements EntityMapper<PageDTO, Page> {
+
+    @Mapping(target= "contentId", source="entity.content.id")
+    public abstract PageDTO toDTO(Page entity);
+
 
 //    @Autowired
 //    ComponentMapper componentMapper;

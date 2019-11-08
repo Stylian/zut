@@ -9,6 +9,6 @@ public class PageDTO {
     private int id;
     private String title;
     private String description;
-    private ComponentDTO content;
+    private int contentId;
 
 }

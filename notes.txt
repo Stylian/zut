@@ -1,7 +1,5 @@
 todo
 
-page components issues with parent, lombok, mapper
-
 
 
 

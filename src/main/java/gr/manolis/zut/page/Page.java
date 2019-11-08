@@ -22,4 +22,8 @@ public class Page {
     @OneToOne(cascade = CascadeType.ALL)
     private Component content;
 
+    public void setContent(Component content) {
+        this.content = content;
+        this.content.setPage(this);
+    }
 }

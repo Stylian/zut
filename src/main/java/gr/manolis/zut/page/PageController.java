@@ -3,14 +3,22 @@ package gr.manolis.zut.page;
 import gr.manolis.zut.page.component.ComponentDTO;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
+import org.apache.log4j.Logger;
+import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.persistence.EntityNotFoundException;
+import javax.validation.constraints.Min;
 import java.util.List;
 
 @RestController
 @RequestMapping("/pages")
 public class PageController {
+
+    Logger logger = Logger.getLogger(PageController.class);
 
     @Autowired
     private PageService pageService;
@@ -23,67 +31,83 @@ public class PageController {
 
     // -------------------------------------------------- PAGES -----------------------------------------------------//
     @GetMapping("/")
-    public List<PageDTO> getAllPages() {
+    public ResponseEntity<List<PageDTO>> getAllPages() {
+        logger.info("getAllPages...");
 
         List<Page> pages = pageRepository.findAll();
         List<PageDTO> pagesDTO = pageMapper.toDTO(pages);
 
-        return pagesDTO;
+        return new ResponseEntity<>(pagesDTO, HttpStatus.OK);
     }
 
     @GetMapping("/{page_id}")
-    public PageDTO getPage(@PathVariable("page_id") String strPageId) {
+    public ResponseEntity<PageDTO> getPage(@PathVariable("page_id") int pageId) {
+        logger.info("getPage...");
 
-        int pageId = NumberUtils.toInt(strPageId);
-        Page page = pageRepository.getOne(pageId);
-        PageDTO pageDTO = pageMapper.toDTO(page);
+        if (pageId == 0) {
+            logger.error("page_id parameter is not a number");
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
 
-        return pageDTO;
+        try {
+            Page page = pageRepository.getOne(pageId);
+            PageDTO pageDTO = pageMapper.toDTO(page);
+            return new ResponseEntity<>(pageDTO, HttpStatus.OK);
+
+        } catch (EntityNotFoundException e) {
+            logger.error("entity with the specified id does not exist in the database");
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        }
     }
 
     @ResponseBody
     @PostMapping("/")
-    public PageDTO insertPage(
-            @RequestParam("title") String title,
+    public ResponseEntity<PageDTO> insertPage(
+            @RequestParam("title") @NotBlank String title,
             @RequestParam("description") String description
     ) {
 
         PageDTO pageDTO = new PageDTO();
-        if(StringUtils.isBlank(title)) {
-            pageDTO.setId(-1);
-            return pageDTO;
-        }
-
         pageDTO.setTitle(title);
         pageDTO.setDescription(description);
 
         PageDTO savedPageDTO = pageService.insert(pageDTO);
 
-        return savedPageDTO;
+        return new ResponseEntity<>(savedPageDTO, HttpStatus.CREATED);
     }
 
     @DeleteMapping("/{page_id}")
-    public int deletePage(@PathVariable("page_id") String strPageId) {
+    public ResponseEntity<Integer> deletePage(@PathVariable("page_id") int pageId) {
 
-        int pageId = NumberUtils.toInt(strPageId);
+        // check if page exists in the database
+        ResponseEntity<PageDTO> responseEntity = getPage(pageId);
+        if (!HttpStatus.OK.equals(responseEntity.getStatusCode())) {
+            return new ResponseEntity<>(0, responseEntity.getStatusCode());
+        }
+
         pageRepository.delete(pageId);
-
-        return 1;
+        return new ResponseEntity<>(pageId, HttpStatus.OK);
     }
 
     // ----------------------------------------------- COMPONENTS --------------------------------------------------//
 
     @ResponseBody
     @PostMapping("/{page_id}/components")
-    public PageDTO insertComponent(
-            @PathVariable("page_id") String strPageId,
-            @RequestParam("top") int top,
-            @RequestParam("left") int left,
-            @RequestParam("height") int height,
-            @RequestParam("width") int width
+    public ResponseEntity<ComponentDTO> insertComponent(
+            @PathVariable("page_id") int pageId,
+            @RequestParam("top") @Min(0) int top,
+            @RequestParam("left") @Min(0) int left,
+            @RequestParam("height") @Min(0) int height,
+            @RequestParam("width") @Min(0) int width
     ) {
 
-        PageDTO pageDTO = getPage(strPageId);
+        // check if page exists in the database
+        ResponseEntity<PageDTO> responseEntity = getPage(pageId);
+        if (!HttpStatus.OK.equals(responseEntity.getStatusCode())) {
+            return new ResponseEntity<>(null, responseEntity.getStatusCode());
+        }
+
+        PageDTO pageDTO = responseEntity.getBody();
 
         // this is the new component
         ComponentDTO componentDTO = new ComponentDTO();
@@ -91,16 +115,10 @@ public class PageController {
         componentDTO.setTop(top);
         componentDTO.setWidth(width);
         componentDTO.setHeight(height);
-        componentDTO.setPage(pageDTO);
-        componentDTO.setParent(pageDTO.getContent());
 
-        pageDTO.getContent().getChildren().add(componentDTO);
-
-        PageDTO savedPageDTO = pageService.save(pageDTO);
-
-        return savedPageDTO;
+        ComponentDTO savedComponentDTO = pageService.addComponent(pageDTO.getId(), componentDTO);
+        return new ResponseEntity<>(savedComponentDTO, HttpStatus.CREATED);
     }
-
 
 
 }

@@ -1,6 +1,8 @@
 package gr.manolis.zut.page;
 
 import gr.manolis.zut.page.component.Component;
+import gr.manolis.zut.page.component.ComponentDTO;
+import gr.manolis.zut.page.component.ComponentMapper;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,6 +14,9 @@ public class PageService {
     
     @Autowired
     private PageMapper pageMapper;
+
+    @Autowired
+    private ComponentMapper componentMapper;
 
     @Autowired
     private PageRepository pageRepository;
@@ -27,13 +32,21 @@ public class PageService {
         return savedPageDTO;
     }
 
-    public PageDTO save(PageDTO pageDTO) {
-        logger.info("saving page...");
+    public ComponentDTO addComponent(int pageId, ComponentDTO componentDTO) {
 
-        Page page = pageMapper.toEntity(pageDTO);
+        Page page = pageRepository.getOne(pageId);
+        Component component = componentMapper.toEntity(componentDTO);
+        component.setPage(page);
+        component.setParent(page.getContent());
+
+        int componentsNumber = page.getContent().getChildren().size();
+        page.getContent().getChildren().add(component);
+
         Page savedPage = pageRepository.save(page);
-        PageDTO savedPageDTO = pageMapper.toDTO(savedPage);
 
-        return savedPageDTO;
+        ComponentDTO savedComponentDTO = componentMapper.toDTO(savedPage.getContent()
+                .getChildren().get(componentsNumber));
+
+        return savedComponentDTO;
     }
 }
