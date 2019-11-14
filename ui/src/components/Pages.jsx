@@ -27,15 +27,28 @@ class Pages extends Component {
             isLoaded: false,
             pages: [],
             tabActive: 0,
-            dialogOpen: false,
-            title: "",
-            titleError: true,
-            description: "",
+            addMenu: {
+                dialogOpen: false,
+                title: "",
+                description: "",
+                titleError: true,
+            },
             editMenu: {
+                dialogOpen: false,
+                title: "",
+                description: "",
+                titleError: true,
+            },
+            pageMenu: {
                 x: 0,
                 y: 0,
-                obj: null,
-                pageId: -1
+                open: false,
+                page: {
+                    id: -1,
+                    title: "",
+                    description: ""
+                },
+
             },
         };
     }
@@ -66,7 +79,7 @@ class Pages extends Component {
     }
 
     // create page dialog handlers
-    changeField = field => (event) => {
+    changeField = (field, dialogType) => (event) => {
         let value = event.target.value;
         if (value < 0) {
             return;
@@ -76,26 +89,35 @@ class Pages extends Component {
             this.setState(state => {
                 return {
                     ...state,
-                    title: value,
-                    titleError: value === ""
+                    [dialogType]: {
+                        ...state[dialogType],
+                        title: value,
+                        titleError: value === ""
+                    }
                 }
             });
         } else {
             this.setState(state => {
                 return {
                     ...state,
-                    description: value,
+                    [dialogType]: {
+                        ...state[dialogType],
+                        description: value,
+                    }
                 }
             });
         }
 
     }
 
-    closeDialog = (event, newValue) => {
+    closeAddMenu = (event, newValue) => {
         this.setState(state => {
             return {
                 ...state,
-                dialogOpen: false,
+                addMenu: {
+                    ...state.addMenu,
+                    dialogOpen: false,
+                }
             }
         });
     }
@@ -106,7 +128,7 @@ class Pages extends Component {
         fetch("/pages/", {
             method: 'POST',
             headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-            body: "title=" + this.state.title + "&description=" + this.state.description
+            body: "title=" + this.state.addMenu.title + "&description=" + this.state.addMenu.description
         })
             .then(res => res.json())
             .then(
@@ -115,12 +137,15 @@ class Pages extends Component {
                     if (newPage.id === -1) {
                         return;
                     }
-                    let newPages = [...this.state.pages, newPage]
+                    let newPages = [...this.state.pages, newPage];
                     this.setState(state => {
                         return {
                             ...state,
                             pages: newPages,
-                            dialogOpen: false,
+                            addMenu: {
+                                ...state.addMenu,
+                                dialogOpen: false
+                            },
                             tabActive: this.state.pages.length // as it has not updated yet, so that is former size
                         }
                     });
@@ -145,7 +170,10 @@ class Pages extends Component {
             this.setState(state => {
                 return {
                     ...state,
-                    dialogOpen: true,
+                    addMenu: {
+                        ...state.addMenu,
+                        dialogOpen: true
+                    },
                 }
             });
         } else {
@@ -162,11 +190,15 @@ class Pages extends Component {
 
     // page menu handlers
     pageMenuClose = () => {
-        this.setState({
-            editMenu: {
-                obj: null,
-                x: 0,
-                y: 0
+        this.setState(state => {
+            return {
+                ...state,
+                pageMenu: {
+                    ...state.pageMenu,
+                    open: false,
+                    x: 0,
+                    y: 0
+                }
             }
         });
     }
@@ -177,31 +209,119 @@ class Pages extends Component {
             document.oncontextmenu = function () {
                 return false;
             }
-            this.setState({
-                editMenu: {
-                    obj: event.currentTarget,
-                    x: event.clientX,
-                    y: event.clientY,
-                    pageId: event.currentTarget.dataset.pageid
+
+            let page = {
+                id: event.currentTarget.dataset.pageid,
+                    title: event.currentTarget.dataset.pagetitle,
+                    description: event.currentTarget.dataset.pagedescription,
+            };
+            let x = event.clientX;
+            let y = event.clientY;
+
+            this.setState(state => {
+                return {
+                    ...state,
+                    pageMenu: {
+                        ...state.pageMenu,
+                        open: true,
+                        x: x,
+                        y: y,
+                        page: page,
+                    }
                 }
             });
         }
     }
 
     openEditPopup = (event) => {
-        console.log("TDODO")
+        this.setState(state => {
+            return {
+                ...state,
+                editMenu: {
+                    ...state.editMenu,
+                    dialogOpen: true,
+                    title: state.pageMenu.page.title,
+                    description: state.pageMenu.page.description,
+                }
+            }
+        });
     }
 
+    closeEditMenu = (event, newValue) => {
+        this.setState(state => {
+            return {
+                ...state,
+                editMenu: {
+                    ...state.editMenu,
+                    dialogOpen: false,
+                }
+            }
+        });
+    }
+
+    updatePage = (event) => {
+
+        fetch("/pages/" + this.state.pageMenu.page.id, {
+            method: 'PUT',
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+            body: "title=" + this.state.editMenu.title + "&description=" + this.state.editMenu.description
+        })
+            .then(res => res.json())
+            .then(
+                (result) => {
+                    this.setState(state => {
+
+
+                        // TODO find and rename page from list
+                        // let newPages = [...this.state.pages, newPage];
+                        let newPages = [...this.state.pages];
+
+                        return {
+                            ...state,
+                            pages: newPages,
+                            editMenu: {
+                                ...state.editMenu,
+                                dialogOpen: false
+                            },
+                        }
+                    });
+
+                },
+                (error) => {
+                    this.setState(state => {
+                        return {
+                            ...state,
+                            error
+                        }
+                    });
+                }
+            )
+
+    }
+
+
     deletePage = (event) => {
-        fetch("/pages/" + this.state.editMenu.pageId, {
+        fetch("/pages/" + this.state.pageMenu.page.id, {
             method: 'DELETE',
         })
             .then(res => res.json())
             .then(
                 (result) => {
-                    // redirect to landing page
-                    window.location.href = "/";
 
+                    // TODO figure out which one to remove
+                    let newPages = [...this.state.pages];
+
+                    this.setState(state => {
+                        return {
+                            ...state,
+                            pages: newPages,
+                            addMenu: {
+                                ...state.addMenu,
+                                dialogOpen: false
+                            },
+                            tabActive: this.state.pages.length // as it has not updated yet, so that is former size
+                        }
+                    });
                 },
                 (error) => {
                     this.setState(state => {
@@ -221,7 +341,10 @@ class Pages extends Component {
                         {this.state.pages.map((page, k) => {
                             return (
                                 <Tab label={page.title} data-istab={true} key={k} onMouseDown={this.pageMenuOpen}
-                                     data-pageid={page.id}/>
+                                     data-pageid={page.id}
+                                     data-pagetitle={page.title}
+                                     data-pagedescription={page.description}
+                                />
                             )
                         })}
                         <Tab icon={<AddIcon/>} data-istab={false}/>
@@ -236,9 +359,9 @@ class Pages extends Component {
                     <Menu
                         id="simple-menu"
                         anchorReference="anchorPosition"
-                        anchorPosition={{top: this.state.editMenu.y, left: this.state.editMenu.x}}
+                        anchorPosition={{top: this.state.pageMenu.y, left: this.state.pageMenu.x}}
                         keepMounted
-                        open={Boolean(this.state.editMenu.obj)}
+                        open={this.state.pageMenu.open}
                         onClose={this.pageMenuClose}
                     >
                         <MenuItem onClick={this.openEditPopup}>
@@ -256,20 +379,21 @@ class Pages extends Component {
                     </Menu>
 
                     {/*create page dialog*/}
-                    <Dialog open={this.state.dialogOpen} onClose={this.closeDialog} aria-labelledby="form-dialog-title">
+                    <Dialog open={this.state.addMenu.dialogOpen} onClose={this.closeAddMenu}
+                            aria-labelledby="form-dialog-title">
                         <DialogTitle id="form-dialog-title">add a new page</DialogTitle>
                         <DialogContent>
                             <TextField
                                 autoFocus
                                 required
-                                error={this.state.titleError}
+                                error={this.state.addMenu.titleError}
                                 margin="dense"
                                 id="title"
                                 label="title"
                                 type="text"
                                 fullWidth
-                                value={this.state.title}
-                                onChange={this.changeField("title")}
+                                value={this.state.addMenu.title}
+                                onChange={this.changeField("title", "addMenu")}
                             />
                             <TextField
                                 margin="dense"
@@ -279,19 +403,62 @@ class Pages extends Component {
                                 fullWidth
                                 multiline
                                 rows="3"
-                                value={this.state.description}
-                                onChange={this.changeField("description")}
+                                value={this.state.addMenu.description}
+                                onChange={this.changeField("description", "addMenu")}
                             />
                         </DialogContent>
                         <DialogActions>
                             <Button
                                 onClick={this.insertPage}
                                 color="primary"
-                                disabled={this.state.titleError}
+                                disabled={this.state.addMenu.titleError}
                             >
                                 Insert
                             </Button>
-                            <Button onClick={this.closeDialog} color="primary">
+                            <Button onClick={this.closeAddMenu} color="primary">
+                                Cancel
+                            </Button>
+                        </DialogActions>
+                    </Dialog>
+
+                    {/*edit page dialog*/}
+                    <Dialog open={this.state.editMenu.dialogOpen} onClose={this.closeEditMenu}
+                            aria-labelledby="form-dialog-title">
+                        <DialogTitle id="form-dialog-title">edit page</DialogTitle>
+                        <DialogContent>
+                            <TextField
+                                autoFocus
+                                required
+                                error={this.state.editMenu.titleError}
+                                margin="dense"
+                                id="title"
+                                label="title"
+                                type="text"
+                                fullWidth
+                                value={this.state.editMenu.title}
+                                onChange={this.changeField("title", "editMenu")}
+                            />
+                            <TextField
+                                margin="dense"
+                                id="description"
+                                label="description"
+                                type="text"
+                                fullWidth
+                                multiline
+                                rows="3"
+                                value={this.state.editMenu.description}
+                                onChange={this.changeField("description", "editMenu")}
+                            />
+                        </DialogContent>
+                        <DialogActions>
+                            <Button
+                                onClick={this.updatePage}
+                                color="primary"
+                                disabled={this.state.editMenu.titleError}
+                            >
+                                Insert
+                            </Button>
+                            <Button onClick={this.closeEditMenu} color="primary">
                                 Cancel
                             </Button>
                         </DialogActions>

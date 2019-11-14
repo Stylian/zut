@@ -1,15 +1,15 @@
 todo
 
-
-
-
-
-tab right click on them to edit/delete
+put edit controller todo
+todo replies to delete and update
 
 
 tabs description/ to add/ on hover display
 
 
+
+should be asked first before deleting page
+should audit changes....
 
 types of components
 panel
