@@ -34,7 +34,8 @@ class Pages extends Component {
             editMenu: {
                 x: 0,
                 y: 0,
-                obj: null
+                obj: null,
+                pageId: -1
             },
         };
     }
@@ -136,7 +137,7 @@ class Pages extends Component {
 
     }
 
-    handleChange = (event, newValue) => {
+    changeTab = (event, newValue) => {
 
         let isTab = event.currentTarget.dataset.istab === "true";
         // plus icon popup
@@ -159,17 +160,19 @@ class Pages extends Component {
 
     }
 
-    // edit menu handlers
-    editMenuClose = () => {
+    // page menu handlers
+    pageMenuClose = () => {
         this.setState({
             editMenu: {
-                obj: null
+                obj: null,
+                x: 0,
+                y: 0
             }
         });
     }
 
-    editMenuOpen = (event) => {
-        this.editMenuClose();
+    pageMenuOpen = (event) => {
+        this.pageMenuClose();
         if (event.buttons === 2) {
             document.oncontextmenu = function () {
                 return false;
@@ -178,19 +181,47 @@ class Pages extends Component {
                 editMenu: {
                     obj: event.currentTarget,
                     x: event.clientX,
-                    y: event.clientY
+                    y: event.clientY,
+                    pageId: event.currentTarget.dataset.pageid
                 }
             });
         }
     }
 
+    openEditPopup = (event) => {
+        console.log("TDODO")
+    }
+
+    deletePage = (event) => {
+        fetch("/pages/" + this.state.editMenu.pageId, {
+            method: 'DELETE',
+        })
+            .then(res => res.json())
+            .then(
+                (result) => {
+                    // redirect to landing page
+                    window.location.href = "/";
+
+                },
+                (error) => {
+                    this.setState(state => {
+                        return {
+                            ...state,
+                            error
+                        }
+                    });
+                }
+            )
+    }
+
     render() {
         return this.state.isLoaded ? (
                 <div>
-                    <Tabs value={this.state.tabActive} onChange={this.handleChange}>
+                    <Tabs value={this.state.tabActive} onChange={this.changeTab}>
                         {this.state.pages.map((page, k) => {
                             return (
-                                <Tab label={page.title} data-istab={true} key={k} onMouseDown={this.editMenuOpen}/>
+                                <Tab label={page.title} data-istab={true} key={k} onMouseDown={this.pageMenuOpen}
+                                     data-pageid={page.id}/>
                             )
                         })}
                         <Tab icon={<AddIcon/>} data-istab={false}/>
@@ -208,15 +239,15 @@ class Pages extends Component {
                         anchorPosition={{top: this.state.editMenu.y, left: this.state.editMenu.x}}
                         keepMounted
                         open={Boolean(this.state.editMenu.obj)}
-                        onClose={this.editMenuClose}
+                        onClose={this.pageMenuClose}
                     >
-                        <MenuItem>
+                        <MenuItem onClick={this.openEditPopup}>
                             <ListItemIcon>
                                 <EditIcon/>
                             </ListItemIcon>
                             <ListItemText primary="Edit"/>
                         </MenuItem>
-                        <MenuItem>
+                        <MenuItem onClick={this.deletePage}>
                             <ListItemIcon>
                                 <DeleteIcon/>
                             </ListItemIcon>

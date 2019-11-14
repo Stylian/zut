@@ -4,8 +4,7 @@ import EditIcon from '@material-ui/icons/Edit';
 import PublishIcon from '@material-ui/icons/Publish';
 import LockIcon from '@material-ui/icons/Lock';
 import SaveIcon from '@material-ui/icons/Save';
-import DeleteIcon from '@material-ui/icons/Delete';
-import {Box, Paper, TableCell} from "@material-ui/core";
+import {Box, Paper} from "@material-ui/core";
 
 class Page extends Component {
 
@@ -70,33 +69,9 @@ class Page extends Component {
 
     }
 
-    deletePage = (event) => {
-
-        fetch("/pages/"+this.props.id, {
-            method: 'DELETE',
-        })
-            .then(res => res.json())
-            .then(
-                (result) => {
-                    // redirect to landing page
-                    window.location.href = "/";
-
-                },
-                (error) => {
-                    this.setState(state => {
-                        return {
-                            ...state,
-                            error
-                        }
-                    });
-                }
-            )
-
-    }
-
     render() {
         return this.state.isLoaded ? (
-            <Paper style={{margin: 10, "margin-top": 10}}>
+            <Paper style={{margin: 10, marginTop: 10}}>
 
                 <Paper>
                     <Button>
@@ -115,10 +90,6 @@ class Page extends Component {
                         <SaveIcon/>
                         Save
                     </Button>
-                    <Button onClick={this.deletePage}>
-                        <DeleteIcon/>
-                        Delete
-                    </Button>
                 </Paper>
 
                 <Box
@@ -128,7 +99,8 @@ class Page extends Component {
                         minHeight: 500,
                         maxHeight: 500
                     }}
-                    class={"page_content"}></Box>
+                    // class={"page_content"}
+                ></Box>
 
             </Paper>
         ) : (null)
