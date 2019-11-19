@@ -19,7 +19,7 @@ public class Page {
     @Column
     private String description;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "parent", orphanRemoval = true, cascade = CascadeType.ALL)
     private Component content;
 
     public void setContent(Component content) {

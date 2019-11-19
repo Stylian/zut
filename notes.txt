@@ -4,9 +4,6 @@ todo deleting foreign constraint
 
 
 
-should be asked first before deleting page
-should audit changes....
-
 types of components
 panel
 graph
@@ -14,3 +11,12 @@ table of data
 form
 button
 label
+
+
+
+
+0.2
+
+should be asked first before deleting page
+should audit changes....
+
