@@ -1,8 +1,8 @@
 package gr.manolis.zut.page;
 
-import gr.manolis.zut.page.component.ComponentDTO;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.math.NumberUtils;
+import gr.manolis.zut.component.ComponentDTO;
+import gr.manolis.zut.component.ComponentService;
+import gr.manolis.zut.component.types.panel.PanelDTO;
 import org.apache.log4j.Logger;
 import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +24,9 @@ public class PageController {
     private PageService pageService;
 
     @Autowired
+    private ComponentService componentService;
+
+    @Autowired
     private PageMapper pageMapper;
 
     @Autowired
@@ -37,6 +40,7 @@ public class PageController {
         List<Page> pages = pageRepository.findAll();
         List<PageDTO> pagesDTO = pageMapper.toDTO(pages);
 
+        logger.info("getAllPages replies...");
         return new ResponseEntity<>(pagesDTO, HttpStatus.OK);
     }
 
@@ -52,6 +56,8 @@ public class PageController {
         try {
             Page page = pageRepository.getOne(pageId);
             PageDTO pageDTO = pageMapper.toDTO(page);
+
+            logger.info("getPage replies...");
             return new ResponseEntity<>(pageDTO, HttpStatus.OK);
 
         } catch (EntityNotFoundException e) {
@@ -66,6 +72,7 @@ public class PageController {
             @RequestParam("title") @NotBlank String title,
             @RequestParam("description") String description
     ) {
+        logger.info("insertPage...");
 
         PageDTO pageDTO = new PageDTO();
         pageDTO.setTitle(title);
@@ -73,6 +80,7 @@ public class PageController {
 
         PageDTO savedPageDTO = pageService.insert(pageDTO);
 
+        logger.info("insertPage replies...");
         return new ResponseEntity<>(savedPageDTO, HttpStatus.CREATED);
     }
 
@@ -83,6 +91,7 @@ public class PageController {
             @RequestParam("title") @NotBlank String title,
             @RequestParam("description") String description
     ) {
+        logger.info("editPage...");
 
         // check if page exists in the database
         ResponseEntity<PageDTO> responseEntity = getPage(pageId);
@@ -96,11 +105,13 @@ public class PageController {
 
         PageDTO savedPageDTO = pageService.edit(pageDTO);
 
+        logger.info("editPage replies...");
         return new ResponseEntity<>(savedPageDTO, HttpStatus.CREATED);
     }
 
     @DeleteMapping("/{page_id}")
     public ResponseEntity<Integer> deletePage(@PathVariable("page_id") int pageId) {
+        logger.info("deletePage...");
 
         // check if page exists in the database
         ResponseEntity<PageDTO> responseEntity = getPage(pageId);
@@ -109,6 +120,8 @@ public class PageController {
         }
 
         pageService.delete(responseEntity.getBody());
+
+        logger.info("deletePage replies...");
         return new ResponseEntity<>(pageId, HttpStatus.OK);
     }
 
@@ -133,13 +146,13 @@ public class PageController {
         PageDTO pageDTO = responseEntity.getBody();
 
         // this is the new component
-        ComponentDTO componentDTO = new ComponentDTO();
+        PanelDTO componentDTO = new PanelDTO();
         componentDTO.setLeft(left);
         componentDTO.setTop(top);
         componentDTO.setWidth(width);
         componentDTO.setHeight(height);
 
-        ComponentDTO savedComponentDTO = pageService.addComponent(pageDTO.getId(), componentDTO);
+        ComponentDTO savedComponentDTO = componentService.addComponent(pageDTO.getId(), componentDTO);
         return new ResponseEntity<>(savedComponentDTO, HttpStatus.CREATED);
     }
 

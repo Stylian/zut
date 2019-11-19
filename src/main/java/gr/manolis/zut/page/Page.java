@@ -1,6 +1,6 @@
 package gr.manolis.zut.page;
 
-import gr.manolis.zut.page.component.Component;
+import gr.manolis.zut.component.Component;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -19,7 +19,7 @@ public class Page {
     @Column
     private String description;
 
-    @OneToOne(fetch=FetchType.EAGER, mappedBy = "parent", orphanRemoval = true, cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "page", cascade = CascadeType.ALL)
     private Component content;
 
     public void setContent(Component content) {

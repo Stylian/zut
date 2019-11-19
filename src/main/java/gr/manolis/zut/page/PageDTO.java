@@ -1,6 +1,5 @@
 package gr.manolis.zut.page;
 
-import gr.manolis.zut.page.component.ComponentDTO;
 import lombok.Data;
 
 @Data

@@ -1,8 +1,6 @@
-package gr.manolis.zut.page.component;
+package gr.manolis.zut.component;
 
-import gr.manolis.zut.page.PageDTO;
 import lombok.Data;
-import lombok.ToString;
 
 import java.util.ArrayList;
 import java.util.List;

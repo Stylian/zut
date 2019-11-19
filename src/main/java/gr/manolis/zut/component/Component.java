@@ -1,9 +1,8 @@
-package gr.manolis.zut.page.component;
+package gr.manolis.zut.component;
 
 import gr.manolis.zut.page.Page;
 import lombok.Data;
 import lombok.ToString;
-import org.mapstruct.Context;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -11,6 +10,7 @@ import java.util.List;
 
 @Data
 @Entity(name = "COMPONENTS")
+@Inheritance(strategy = InheritanceType.JOINED)
 public class Component {
 
     @Id
@@ -40,7 +40,7 @@ public class Component {
     private Component parent;
 
     @ToString.Exclude
-    @ManyToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "page_id")
     private Page page;
 

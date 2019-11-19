@@ -1,8 +1,6 @@
 package gr.manolis.zut.page;
 
-import gr.manolis.zut.page.component.Component;
-import gr.manolis.zut.page.component.ComponentDTO;
-import gr.manolis.zut.page.component.ComponentMapper;
+import gr.manolis.zut.component.Component;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,9 +14,6 @@ public class PageService {
     private PageMapper pageMapper;
 
     @Autowired
-    private ComponentMapper componentMapper;
-
-    @Autowired
     private PageRepository pageRepository;
 
     public PageDTO insert(PageDTO pageDTO) {
@@ -29,6 +24,7 @@ public class PageService {
         Page savedPage = pageRepository.save(page);
         PageDTO savedPageDTO = pageMapper.toDTO(savedPage);
 
+        logger.info("done with insertion");
         return savedPageDTO;
     }
 
@@ -39,30 +35,17 @@ public class PageService {
         Page savedPage = pageRepository.save(page);
         PageDTO savedPageDTO = pageMapper.toDTO(savedPage);
 
+        logger.info("done with edit");
         return savedPageDTO;
     }
 
-    public ComponentDTO addComponent(int pageId, ComponentDTO componentDTO) {
-
-        Page page = pageRepository.getOne(pageId);
-        Component component = componentMapper.toEntity(componentDTO);
-        component.setPage(page);
-        component.setParent(page.getContent());
-
-        int componentsNumber = page.getContent().getChildren().size();
-        page.getContent().getChildren().add(component);
-
-        Page savedPage = pageRepository.save(page);
-
-        ComponentDTO savedComponentDTO = componentMapper.toDTO(savedPage.getContent()
-                .getChildren().get(componentsNumber));
-
-        return savedComponentDTO;
-    }
-
     public void delete(PageDTO pageDTO) {
+        logger.info("deleting page... " + pageDTO.getId());
+
         Page page = pageMapper.toEntity(pageDTO);
         page.setAlive(0);
         pageRepository.save(page);
+
+        logger.info("done with delete");
     }
 }

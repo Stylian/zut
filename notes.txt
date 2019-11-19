@@ -1,14 +1,9 @@
 todo
 
-
+adding panel, maybe make a componentDTO for all components ? ?? ? ??
 
 types of components
-panel
-graph
-table of data
-form
-button
-label
+
 
 
 
