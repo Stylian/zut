@@ -108,7 +108,7 @@ public class PageController {
             return new ResponseEntity<>(0, responseEntity.getStatusCode());
         }
 
-        pageRepository.delete(pageId);
+        pageService.delete(responseEntity.getBody());
         return new ResponseEntity<>(pageId, HttpStatus.OK);
     }
 

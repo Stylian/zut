@@ -10,5 +10,6 @@ public class PageDTO {
     private String title;
     private String description;
     private int contentId;
+    private boolean alive;
 
 }

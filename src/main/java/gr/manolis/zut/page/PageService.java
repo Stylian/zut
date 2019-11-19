@@ -59,4 +59,10 @@ public class PageService {
 
         return savedComponentDTO;
     }
+
+    public void delete(PageDTO pageDTO) {
+        Page page = pageMapper.toEntity(pageDTO);
+        page.setAlive(0);
+        pageRepository.save(page);
+    }
 }

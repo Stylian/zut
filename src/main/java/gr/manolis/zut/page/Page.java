@@ -19,11 +19,14 @@ public class Page {
     @Column
     private String description;
 
-    @OneToOne(mappedBy = "parent", orphanRemoval = true, cascade = CascadeType.ALL)
+    @OneToOne(fetch=FetchType.EAGER, mappedBy = "parent", orphanRemoval = true, cascade = CascadeType.ALL)
     private Component content;
 
     public void setContent(Component content) {
         this.content = content;
         this.content.setPage(this);
     }
+
+    @Column
+    private int alive = 1;
 }
