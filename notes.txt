@@ -2,8 +2,6 @@ todo
 
 todo deleting foreign constraint
 
-tabs description/ to add/ on hover display
-
 
 
 should be asked first before deleting page

@@ -341,7 +341,10 @@ class Pages extends Component {
                     <Tabs value={this.state.tabActive} onChange={this.changeTab}>
                         {this.state.pages.map((page, k) => {
                             return (
-                                <Tab label={page.title} data-istab={true} key={k} onMouseDown={this.pageMenuOpen}
+                                <Tab label={page.title}
+                                     title={page.description}
+                                     data-istab={true} key={k}
+                                     onMouseDown={this.pageMenuOpen}
                                      data-pageid={page.id}
                                      data-pagetitle={page.title}
                                      data-pagedescription={page.description}
