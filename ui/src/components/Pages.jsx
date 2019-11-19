@@ -31,13 +31,11 @@ class Pages extends Component {
                 dialogOpen: false,
                 title: "",
                 description: "",
-                titleError: true,
             },
             editMenu: {
                 dialogOpen: false,
                 title: "",
                 description: "",
-                titleError: true,
             },
             pageMenu: {
                 x: 0,
@@ -92,7 +90,6 @@ class Pages extends Component {
                     [dialogType]: {
                         ...state[dialogType],
                         title: value,
-                        titleError: value === ""
                     }
                 }
             });
@@ -120,46 +117,6 @@ class Pages extends Component {
                 }
             }
         });
-    }
-
-    // main page handlers
-    insertPage = (event) => {
-
-        fetch("/pages/", {
-            method: 'POST',
-            headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-            body: "title=" + this.state.addMenu.title + "&description=" + this.state.addMenu.description
-        })
-            .then(res => res.json())
-            .then(
-                (result) => {
-                    let newPage = result;
-                    if (newPage.id === -1) {
-                        return;
-                    }
-                    let newPages = [...this.state.pages, newPage];
-                    this.setState(state => {
-                        return {
-                            ...state,
-                            pages: newPages,
-                            addMenu: {
-                                ...state.addMenu,
-                                dialogOpen: false
-                            },
-                            tabActive: this.state.pages.length // as it has not updated yet, so that is former size
-                        }
-                    });
-                },
-                (error) => {
-                    this.setState(state => {
-                        return {
-                            ...state,
-                            error
-                        }
-                    });
-                }
-            )
-
     }
 
     changeTab = (event, newValue) => {
@@ -260,6 +217,44 @@ class Pages extends Component {
         });
     }
 
+    insertPage = (event) => {
+
+        fetch("/pages/", {
+            method: 'POST',
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+            body: "title=" + this.state.addMenu.title + "&description=" + this.state.addMenu.description
+        })
+            .then(res => res.json())
+            .then(
+                (result) => {
+                    let newPage = result;
+                    if (newPage.id === -1) {
+                        return;
+                    }
+                    let newPages = [...this.state.pages, newPage];
+                    this.setState(state => {
+                        return {
+                            ...state,
+                            pages: newPages,
+                            addMenu: {
+                                dialogOpen: false
+                            },
+                            tabActive: this.state.pages.length // as it has not updated yet, so that is former size
+                        }
+                    });
+                },
+                (error) => {
+                    this.setState(state => {
+                        return {
+                            ...state,
+                            error
+                        }
+                    });
+                }
+            )
+
+    }
+
     updatePage = (event) => {
 
         fetch("/pages/" + this.state.pageMenu.page.id, {
@@ -298,7 +293,6 @@ class Pages extends Component {
             )
 
     }
-
 
     deletePage = (event) => {
         this.pageMenuClose();
@@ -390,7 +384,7 @@ class Pages extends Component {
                             <TextField
                                 autoFocus
                                 required
-                                error={this.state.addMenu.titleError}
+                                error={this.state.addMenu.title === ""}
                                 margin="dense"
                                 id="title"
                                 label="title"
@@ -415,7 +409,7 @@ class Pages extends Component {
                             <Button
                                 onClick={this.insertPage}
                                 color="primary"
-                                disabled={this.state.addMenu.titleError}
+                                disabled={this.state.addMenu.title === ""}
                             >
                                 Insert
                             </Button>
@@ -433,7 +427,7 @@ class Pages extends Component {
                             <TextField
                                 autoFocus
                                 required
-                                error={this.state.editMenu.titleError}
+                                error={this.state.editMenu.title === ""}
                                 margin="dense"
                                 id="title"
                                 label="title"
@@ -458,7 +452,7 @@ class Pages extends Component {
                             <Button
                                 onClick={this.updatePage}
                                 color="primary"
-                                disabled={this.state.editMenu.titleError}
+                                disabled={this.state.editMenu.title === ""}
                             >
                                 Insert
                             </Button>
