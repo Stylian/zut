@@ -234,6 +234,7 @@ class Pages extends Component {
     }
 
     openEditPopup = (event) => {
+        this.pageMenuClose();
         this.setState(state => {
             return {
                 ...state,
@@ -271,14 +272,13 @@ class Pages extends Component {
                 (result) => {
                     this.setState(state => {
 
-
-                        // TODO find and rename page from list
-                        // let newPages = [...this.state.pages, newPage];
-                        let newPages = [...this.state.pages];
+                        let pagesUpdated = [...this.state.pages];
+                        let index = pagesUpdated.findIndex( a => a.id === result.id);
+                        pagesUpdated[index] = result;
 
                         return {
                             ...state,
-                            pages: newPages,
+                            pages: pagesUpdated,
                             editMenu: {
                                 ...state.editMenu,
                                 dialogOpen: false
@@ -301,6 +301,7 @@ class Pages extends Component {
 
 
     deletePage = (event) => {
+        this.pageMenuClose();
         fetch("/pages/" + this.state.pageMenu.page.id, {
             method: 'DELETE',
         })
@@ -308,8 +309,8 @@ class Pages extends Component {
             .then(
                 (result) => {
 
-                    // TODO figure out which one to remove
                     let newPages = [...this.state.pages];
+                    newPages = newPages.filter( a => a.id !== result);
 
                     this.setState(state => {
                         return {
@@ -319,7 +320,7 @@ class Pages extends Component {
                                 ...state.addMenu,
                                 dialogOpen: false
                             },
-                            tabActive: this.state.pages.length // as it has not updated yet, so that is former size
+                            tabActive: this.state.pages.length - 2 // as it has not updated yet, so that is former size
                         }
                     });
                 },

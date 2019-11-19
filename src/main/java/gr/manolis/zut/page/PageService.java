@@ -32,6 +32,16 @@ public class PageService {
         return savedPageDTO;
     }
 
+    public PageDTO edit(PageDTO pageDTO) {
+        logger.info("editing page... " + pageDTO.getId());
+
+        Page page = pageMapper.toEntity(pageDTO);
+        Page savedPage = pageRepository.save(page);
+        PageDTO savedPageDTO = pageMapper.toDTO(savedPage);
+
+        return savedPageDTO;
+    }
+
     public ComponentDTO addComponent(int pageId, ComponentDTO componentDTO) {
 
         Page page = pageRepository.getOne(pageId);

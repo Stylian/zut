@@ -1,8 +1,6 @@
 todo
 
-put edit controller todo
-todo replies to delete and update
-
+todo deleting foreign constraint
 
 tabs description/ to add/ on hover display
 

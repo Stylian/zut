@@ -76,6 +76,29 @@ public class PageController {
         return new ResponseEntity<>(savedPageDTO, HttpStatus.CREATED);
     }
 
+    @ResponseBody
+    @PutMapping("/{page_id}")
+    public ResponseEntity<PageDTO> editPage(
+            @PathVariable("page_id") int pageId,
+            @RequestParam("title") @NotBlank String title,
+            @RequestParam("description") String description
+    ) {
+
+        // check if page exists in the database
+        ResponseEntity<PageDTO> responseEntity = getPage(pageId);
+        PageDTO pageDTO = responseEntity.getBody();
+        if (!HttpStatus.OK.equals(responseEntity.getStatusCode())) {
+            return new ResponseEntity<>(pageDTO, responseEntity.getStatusCode());
+        }
+
+        pageDTO.setTitle(title);
+        pageDTO.setDescription(description);
+
+        PageDTO savedPageDTO = pageService.edit(pageDTO);
+
+        return new ResponseEntity<>(savedPageDTO, HttpStatus.CREATED);
+    }
+
     @DeleteMapping("/{page_id}")
     public ResponseEntity<Integer> deletePage(@PathVariable("page_id") int pageId) {
 
