@@ -1,5 +1,13 @@
 todo
 
+learning css, sme theming , still issues
+
+
+
+
+
+
+
 adding panel, maybe make a componentDTO for all components ? ?? ? ??
 
 types of components

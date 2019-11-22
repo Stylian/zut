@@ -13,9 +13,7 @@ class LandingPage extends Component {
 
     render() {
         return this.state.isLoaded ? (
-            <div>
-                <Pages />
-            </div>
+                <Pages classes={this.props.classes} />
             )
             : (null)
     };

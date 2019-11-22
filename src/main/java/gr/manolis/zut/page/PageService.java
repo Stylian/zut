@@ -21,6 +21,7 @@ public class PageService {
 
         Page page = pageMapper.toEntity(pageDTO);
         page.setContent(new Component());
+        page.setAlive(1);
         Page savedPage = pageRepository.save(page);
         PageDTO savedPageDTO = pageMapper.toDTO(savedPage);
 

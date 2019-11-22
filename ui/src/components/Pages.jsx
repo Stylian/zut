@@ -6,7 +6,7 @@ import {
     DialogContent,
     DialogTitle,
     ListItemIcon,
-    ListItemText,
+    ListItemText, Paper,
     Tab,
     Tabs,
     TextField
@@ -331,8 +331,10 @@ class Pages extends Component {
 
     render() {
         return this.state.isLoaded ? (
-                <div>
-                    <Tabs value={this.state.tabActive} onChange={this.changeTab}>
+                <Paper>
+                    <Tabs className={this.props.classes.pages_tabs}
+                          value={this.state.tabActive}
+                          onChange={this.changeTab}>
                         {this.state.pages.map((page, k) => {
                             return (
                                 <Tab label={page.title}
@@ -349,7 +351,8 @@ class Pages extends Component {
                     </Tabs>
                     {this.state.pages.map((page, k) => {
                         return (
-                            this.state.tabActive === k && <Page key={k} id={page.id}/>
+                            this.state.tabActive === k && <Page key={k} id={page.id}
+                                                                classes={this.props.classes} />
                         )
                     })}
 
@@ -462,7 +465,7 @@ class Pages extends Component {
                         </DialogActions>
                     </Dialog>
 
-                </div>
+                </Paper>
             )
             : (null)
     };

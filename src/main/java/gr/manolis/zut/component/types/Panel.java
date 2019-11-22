@@ -1,4 +1,4 @@
-package gr.manolis.zut.component.types.panel;
+package gr.manolis.zut.component.types;
 
 import gr.manolis.zut.component.Component;
 import lombok.Data;

@@ -5,6 +5,7 @@ import PublishIcon from '@material-ui/icons/Publish';
 import LockIcon from '@material-ui/icons/Lock';
 import SaveIcon from '@material-ui/icons/Save';
 import {Box, Paper} from "@material-ui/core";
+import Container from "./Container";
 
 class Page extends Component {
 
@@ -71,9 +72,9 @@ class Page extends Component {
 
     render() {
         return this.state.isLoaded ? (
-            <Paper style={{margin: 10, marginTop: 10}}>
+            <Box>
 
-                <Paper>
+                <Box className={this.props.classes.page_toolbar}>
                     <Button>
                         <EditIcon/>
                         Edit
@@ -90,19 +91,13 @@ class Page extends Component {
                         <SaveIcon/>
                         Save
                     </Button>
-                </Paper>
+                </Box>
 
-                <Box
-                    style={{
-                        minWidth: 1200,
-                        maxWidth: 1200,
-                        minHeight: 500,
-                        maxHeight: 500
-                    }}
-                    // class={"page_content"}
-                ></Box>
 
-            </Paper>
+
+                <Container contentId={this.state.page.contentId} classes={this.props.classes} />
+
+            </Box>
         ) : (null)
     };
 }

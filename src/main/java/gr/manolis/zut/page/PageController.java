@@ -2,7 +2,6 @@ package gr.manolis.zut.page;
 
 import gr.manolis.zut.component.ComponentDTO;
 import gr.manolis.zut.component.ComponentService;
-import gr.manolis.zut.component.types.panel.PanelDTO;
 import org.apache.log4j.Logger;
 import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -146,7 +145,7 @@ public class PageController {
         PageDTO pageDTO = responseEntity.getBody();
 
         // this is the new component
-        PanelDTO componentDTO = new PanelDTO();
+        ComponentDTO componentDTO = new ComponentDTO();
         componentDTO.setLeft(left);
         componentDTO.setTop(top);
         componentDTO.setWidth(width);
