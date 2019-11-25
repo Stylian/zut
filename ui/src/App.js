@@ -3,22 +3,38 @@ import {BrowserRouter, Route} from "react-router-dom";
 import LandingPage from "./components/LandingPage";
 import {withStyles} from "@material-ui/core";
 
+const palette = {
+    color3: 'rgb(204,214,205)',
+    color2: 'rgb(160, 191, 163)',
+    color1: 'rgb(113, 158, 118)',
+}
 
 const styles = theme => ({
-    pages_tabs: {
-        background: 'linear-gradient(90deg,  rgba(0,107,179,1) 0%, rgba(128,204,255,1) 100%)',
-        border: 0,
-        "border-top-left-radius": 4,
-        "border-top-right-radius": 4,
-        color: 'white',
+    pages_tabs_root: {
+            background: palette.color1,
+            border: 0,
+            "border-top-left-radius": 4,
+            "border-top-right-radius": 4,
+            color: 'white',
+    },
+    pages_tabs_indicator: {
+        backgroundColor: 'transparent',
+    },
+    pages_tabs_selected: {
+        background: palette.color2,
+        color: 'white'
     },
     page_toolbar: {
-        background: 'linear-gradient(90deg,  rgba(0,107,179,1) 0%, rgba(128,204,255,1) 100%)',
-        border: 0,
-        boxShadow: '0 3px 5px 2px rgba(255, 105, 135, .3)',
-        color: 'white',
+        background: palette.color2,
         padding: '0 30px',
+        color: 'white',
+         height: 40
     },
+    page_content: {
+        background: palette.color3,
+        height: 768
+    }
+
 });
 
 

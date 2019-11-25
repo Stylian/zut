@@ -1,10 +1,5 @@
 import React, {Component} from 'react';
-import Button from '@material-ui/core/Button';
-import EditIcon from '@material-ui/icons/Edit';
-import PublishIcon from '@material-ui/icons/Publish';
-import LockIcon from '@material-ui/icons/Lock';
-import SaveIcon from '@material-ui/icons/Save';
-import {Box, Paper} from "@material-ui/core";
+import {Box} from "@material-ui/core";
 
 class Container extends Component {
 
@@ -20,22 +15,10 @@ class Container extends Component {
 
     render() {
         return this.state.isLoaded ? (
-            <Paper>
+            <Box className={this.props.classes.page_content} >
+                {this.props.contentId}
 
-                <Box
-                    style={{
-                        minWidth: 1700,
-                        maxWidth: 1700,
-                        minHeight: 720,
-                        maxHeight: 720,
-                        margin: 10
-                    }}
-                >
-                    {this.props.contentId}
-
-                </Box>
-
-            </Paper>
+            </Box>
         ) : (null)
     };
 }

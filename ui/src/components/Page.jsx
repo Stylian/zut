@@ -75,19 +75,19 @@ class Page extends Component {
             <Box>
 
                 <Box className={this.props.classes.page_toolbar}>
-                    <Button>
+                    <Button className={this.props.classes.page_toolbar}>
                         <EditIcon/>
                         Edit
                     </Button>
-                    <Button>
+                    <Button className={this.props.classes.page_toolbar}>
                         <PublishIcon/>
                         Publish
                     </Button>
-                    <Button>
+                    <Button className={this.props.classes.page_toolbar}>
                         <LockIcon/>
                         Lock view
                     </Button>
-                    <Button onClick={this.savePage}>
+                    <Button onClick={this.savePage} className={this.props.classes.page_toolbar}>
                         <SaveIcon/>
                         Save
                     </Button>

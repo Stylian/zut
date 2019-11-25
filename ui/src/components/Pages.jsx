@@ -169,8 +169,8 @@ class Pages extends Component {
 
             let page = {
                 id: event.currentTarget.dataset.pageid,
-                    title: event.currentTarget.dataset.pagetitle,
-                    description: event.currentTarget.dataset.pagedescription,
+                title: event.currentTarget.dataset.pagetitle,
+                description: event.currentTarget.dataset.pagedescription,
             };
             let x = event.clientX;
             let y = event.clientY;
@@ -268,7 +268,7 @@ class Pages extends Component {
                     this.setState(state => {
 
                         let pagesUpdated = [...this.state.pages];
-                        let index = pagesUpdated.findIndex( a => a.id === result.id);
+                        let index = pagesUpdated.findIndex(a => a.id === result.id);
                         pagesUpdated[index] = result;
 
                         return {
@@ -304,7 +304,7 @@ class Pages extends Component {
                 (result) => {
 
                     let newPages = [...this.state.pages];
-                    newPages = newPages.filter( a => a.id !== result);
+                    newPages = newPages.filter(a => a.id !== result);
 
                     this.setState(state => {
                         return {
@@ -332,18 +332,26 @@ class Pages extends Component {
     render() {
         return this.state.isLoaded ? (
                 <Paper>
-                    <Tabs className={this.props.classes.pages_tabs}
-                          value={this.state.tabActive}
-                          onChange={this.changeTab}>
+                    <Tabs
+                        classes={{
+                            root: this.props.classes.pages_tabs_root,
+                            indicator: this.props.classes.pages_tabs_indicator
+                        }}
+                        value={this.state.tabActive}
+                        onChange={this.changeTab}>
                         {this.state.pages.map((page, k) => {
                             return (
-                                <Tab label={page.title}
-                                     title={page.description}
-                                     data-istab={true} key={k}
-                                     onMouseDown={this.pageMenuOpen}
-                                     data-pageid={page.id}
-                                     data-pagetitle={page.title}
-                                     data-pagedescription={page.description}
+                                <Tab
+                                    classes={{
+                                        selected: this.props.classes.pages_tabs_selected
+                                    }}
+                                    label={page.title}
+                                    title={page.description}
+                                    data-istab={true} key={k}
+                                    onMouseDown={this.pageMenuOpen}
+                                    data-pageid={page.id}
+                                    data-pagetitle={page.title}
+                                    data-pagedescription={page.description}
                                 />
                             )
                         })}
@@ -352,7 +360,7 @@ class Pages extends Component {
                     {this.state.pages.map((page, k) => {
                         return (
                             this.state.tabActive === k && <Page key={k} id={page.id}
-                                                                classes={this.props.classes} />
+                                                                classes={this.props.classes}/>
                         )
                     })}
 
