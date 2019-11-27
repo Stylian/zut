@@ -4,7 +4,7 @@ import EditIcon from '@material-ui/icons/Edit';
 import PublishIcon from '@material-ui/icons/Publish';
 import LockIcon from '@material-ui/icons/Lock';
 import SaveIcon from '@material-ui/icons/Save';
-import {Box, Paper} from "@material-ui/core";
+import {Box} from "@material-ui/core";
 import Container from "./Container";
 
 class Page extends Component {

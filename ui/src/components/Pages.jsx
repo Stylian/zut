@@ -161,7 +161,6 @@ class Pages extends Component {
     }
 
     pageMenuOpen = (event) => {
-        this.pageMenuClose();
         if (event.buttons === 2) {
             document.oncontextmenu = function () {
                 return false;
