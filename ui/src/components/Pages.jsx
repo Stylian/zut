@@ -161,6 +161,7 @@ class Pages extends Component {
     }
 
     pageMenuOpen = (event) => {
+
         if (event.buttons === 2) {
             document.oncontextmenu = function () {
                 return false;
@@ -368,7 +369,6 @@ class Pages extends Component {
                         id="simple-menu"
                         anchorReference="anchorPosition"
                         anchorPosition={{top: this.state.pageMenu.y, left: this.state.pageMenu.x}}
-                        keepMounted
                         open={this.state.pageMenu.open}
                         onClose={this.pageMenuClose}
                     >
@@ -409,8 +409,6 @@ class Pages extends Component {
                                 label="description"
                                 type="text"
                                 fullWidth
-                                multiline
-                                rows="3"
                                 value={this.state.addMenu.description}
                                 onChange={this.changeField("description", "addMenu")}
                             />
@@ -452,8 +450,6 @@ class Pages extends Component {
                                 label="description"
                                 type="text"
                                 fullWidth
-                                multiline
-                                rows="3"
                                 value={this.state.editMenu.description}
                                 onChange={this.changeField("description", "editMenu")}
                             />
@@ -464,7 +460,7 @@ class Pages extends Component {
                                 color="primary"
                                 disabled={this.state.editMenu.title === ""}
                             >
-                                Insert
+                                Update
                             </Button>
                             <Button onClick={this.closeEditMenu} color="primary">
                                 Cancel

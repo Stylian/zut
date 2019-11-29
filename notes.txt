@@ -1,5 +1,7 @@
 todo
 
+multi right clicking should be possible
+
 
 to reconsider design with components and page
 
