@@ -40,7 +40,7 @@ public class Component {
     private Component parent;
 
     @ToString.Exclude
-    @OneToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "page_id")
     private Page page;
 

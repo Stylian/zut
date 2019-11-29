@@ -1,7 +1,6 @@
 package gr.manolis.zut.component;
 
 import gr.manolis.zut.page.Page;
-import gr.manolis.zut.page.PageMapper;
 import gr.manolis.zut.page.PageRepository;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,29 +12,20 @@ public class ComponentService {
     Logger logger = Logger.getLogger(ComponentService.class);
 
     @Autowired
-    private PageMapper pageMapper;
-
-    @Autowired
-    private ComponentMapper componentMapper;
-
-    @Autowired
     private PageRepository pageRepository;
 
-    public ComponentDTO addComponent(int pageId, ComponentDTO componentDTO) {
+    public Component addComponentToPage(Page page, Component component) {
 
-        Page page = pageRepository.getOne(pageId);
-        Component component = componentMapper.toEntity(componentDTO);
-        component.setParent(page.getContent());
+        component.setPage(page);
 
-        int componentsNumber = page.getContent().getChildren().size();
-        page.getContent().getChildren().add(component);
+        int componentsNumber = page.getComponents().size();
+        page.getComponents().add(component);
 
         Page savedPage = pageRepository.save(page);
 
-        ComponentDTO savedComponentDTO = componentMapper.toDTO(savedPage.getContent()
-                .getChildren().get(componentsNumber));
+        Component savedComponent = savedPage.getComponents().get(componentsNumber);
 
-        return savedComponentDTO;
+        return savedComponent;
     }
 
 }

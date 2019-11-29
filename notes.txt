@@ -3,8 +3,6 @@ todo
 multi right clicking should be possible
 
 
-to reconsider design with components and page
-
 then to add  children comps to react ui
 
 adding panel, maybe make a componentDTO for all components ? ?? ? ??

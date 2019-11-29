@@ -19,14 +19,11 @@ public class ComponentController {
     Logger logger = Logger.getLogger(ComponentController.class);
 
     @Autowired
-    private ComponentMapper componentMapper;
-
-    @Autowired
     private ComponentRepository componentRepository;
 
 
     @GetMapping("/{component_id}")
-    public ResponseEntity<ComponentDTO> getComponent(@PathVariable("component_id") int componentId) {
+    public ResponseEntity<Component> getComponent(@PathVariable("component_id") int componentId) {
         logger.info("getComponent...");
 
         if (componentId == 0) {
@@ -36,10 +33,9 @@ public class ComponentController {
 
         try {
             Component component = componentRepository.getOne(componentId);
-            ComponentDTO componentDTO = componentMapper.toDTO(component);
 
             logger.info("getComponent replies...");
-            return new ResponseEntity<>(componentDTO, HttpStatus.OK);
+            return new ResponseEntity<>(component, HttpStatus.OK);
 
         } catch (EntityNotFoundException e) {
             logger.error("entity with the specified id does not exist in the database");

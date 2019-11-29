@@ -10,4 +10,6 @@ public interface PageRepository extends JpaRepository<Page, Integer> {
     @Override
     @Query("SELECT p FROM PAGES p WHERE p.alive = 1")
     List<Page> findAll();
+
+    Page findById(int id);
 }
