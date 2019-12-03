@@ -26,6 +26,6 @@ public class Page {
     private int alive = 1;
 
     @ToString.Exclude
-    @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "page", cascade = CascadeType.ALL)
     private List<Component> components = new ArrayList<>();
 }

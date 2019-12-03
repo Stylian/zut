@@ -1,18 +1,13 @@
 todo
 
+FilterNoneIcon gone
 multi right clicking should be possible
-
-
 then to add  children comps to react ui
 
 adding panel, maybe make a componentDTO for all components ? ?? ? ??
 
 types of components
 
-
-
 0.2
 
 should be asked first before deleting page
-
-

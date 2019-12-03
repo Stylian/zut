@@ -1,6 +1,7 @@
 package gr.manolis.zut.page;
 
 import gr.manolis.zut.component.Component;
+import gr.manolis.zut.component.ComponentRepository;
 import gr.manolis.zut.component.ComponentService;
 import org.apache.log4j.Logger;
 import org.hibernate.validator.constraints.NotBlank;
@@ -27,6 +28,9 @@ public class PageController {
 
     @Autowired
     private PageRepository pageRepository;
+
+    @Autowired
+    private ComponentRepository componentRepository;
 
     // -------------------------------------------------- PAGES -----------------------------------------------------//
     @GetMapping("/")
@@ -147,5 +151,22 @@ public class PageController {
         return new ResponseEntity<>(savedComponent, HttpStatus.CREATED);
     }
 
+    @GetMapping("/{page_id}/components")
+    public ResponseEntity<List<Component>> getAllComponentsOfPage( @PathVariable("page_id") int pageId) {
+        logger.info("getAllComponentsOfPage...");
+
+        // check if page exists in the database
+        ResponseEntity<Page> responseEntity = getPage(pageId);
+        if (!HttpStatus.OK.equals(responseEntity.getStatusCode())) {
+            return new ResponseEntity<>(null, responseEntity.getStatusCode());
+        }
+
+        Page page = responseEntity.getBody();
+
+        List<Component> components = componentRepository.findAllByPageId(page.getId());
+
+        logger.info("getAllComponentsOfPage replies...");
+        return new ResponseEntity<>(components, HttpStatus.OK);
+    }
 
 }

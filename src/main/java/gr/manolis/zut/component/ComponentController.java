@@ -1,16 +1,13 @@
 package gr.manolis.zut.component;
 
-import gr.manolis.zut.page.PageService;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import javax.persistence.EntityNotFoundException;
+import javax.validation.constraints.Min;
+import java.util.List;
 
 @RestController
 @RequestMapping("/components")
@@ -21,27 +18,75 @@ public class ComponentController {
     @Autowired
     private ComponentRepository componentRepository;
 
+    @GetMapping("/")
+    public ResponseEntity<List<Component>> getAllControllers() {
+        logger.info("getAllControllers...");
+
+        List<Component> components = componentRepository.findAll();
+
+        logger.info("getAllControllers replies...");
+        return new ResponseEntity<>(components, HttpStatus.OK);
+    }
 
     @GetMapping("/{component_id}")
     public ResponseEntity<Component> getComponent(@PathVariable("component_id") int componentId) {
         logger.info("getComponent...");
 
-        if (componentId == 0) {
-            logger.error("component_id parameter is not a number");
-            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
-        }
+        Component component = componentRepository.findById(componentId);
 
-        try {
-            Component component = componentRepository.getOne(componentId);
-
-            logger.info("getComponent replies...");
-            return new ResponseEntity<>(component, HttpStatus.OK);
-
-        } catch (EntityNotFoundException e) {
+        if (component == null) {
             logger.error("entity with the specified id does not exist in the database");
             return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
         }
+
+        logger.info("getComponent replies...");
+        return new ResponseEntity<>(component, HttpStatus.OK);
     }
 
 
+    @ResponseBody
+    @PutMapping("/{component_id}")
+    public ResponseEntity<Component> editComponent(
+            @PathVariable("component_id") int componentId,
+            @RequestParam("top") @Min(0) int top,
+            @RequestParam("left") @Min(0) int left,
+            @RequestParam("height") @Min(0) int height,
+            @RequestParam("width") @Min(0) int width
+    ) {
+        logger.info("editComponent...");
+
+        // check if Component exists in the database
+        ResponseEntity<Component> responseEntity = getComponent(componentId);
+        Component component = responseEntity.getBody();
+        if (!HttpStatus.OK.equals(responseEntity.getStatusCode())) {
+            return new ResponseEntity<>(component, responseEntity.getStatusCode());
+        }
+
+        component.setTop(top);
+        component.setLeft(left);
+        component.setHeight(height);
+        component.setWidth(width);
+
+        Component savedComponent = componentRepository.save(component);
+
+        logger.info("editComponent replies...");
+        return new ResponseEntity<>(savedComponent, HttpStatus.CREATED);
+    }
+
+    @DeleteMapping("/{component_id}")
+    public ResponseEntity<Integer> deleteComponent(@PathVariable("component_id") int componentId) {
+        logger.info("deleteComponent...");
+
+        // check if component exists in the database
+        ResponseEntity<Component> responseEntity = getComponent(componentId);
+        if (!HttpStatus.OK.equals(responseEntity.getStatusCode())) {
+            return new ResponseEntity<>(0, responseEntity.getStatusCode());
+        }
+
+        Component component = responseEntity.getBody();
+        componentRepository.delete(component);
+
+        logger.info("deleteComponent replies...");
+        return new ResponseEntity<>(componentId, HttpStatus.OK);
+    }
 }

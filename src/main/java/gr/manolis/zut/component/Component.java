@@ -1,5 +1,6 @@
 package gr.manolis.zut.component;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import gr.manolis.zut.page.Page;
 import lombok.Data;
 import lombok.ToString;
@@ -35,10 +36,12 @@ public class Component {
     @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL)
     private List<Component> children = new ArrayList<>();
 
+    @JsonIgnore
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "parent_id")
     private Component parent;
 
+    @JsonIgnore
     @ToString.Exclude
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "page_id")
