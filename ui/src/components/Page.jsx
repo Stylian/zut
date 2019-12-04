@@ -22,11 +22,14 @@ class Page extends Component {
             isLoaded: false,
             page: null,
             rightClickMenu: {
+                container: null,
                 x: 0,
                 y: 0,
                 open: false,
             },
         };
+
+        this.pageContent = React.createRef();
     }
 
     componentDidMount() {
@@ -60,8 +63,12 @@ class Page extends Component {
             document.oncontextmenu = function () {
                 return false;
             }
-            let x = event.clientX;
-            let y = event.clientY;
+
+            //default//todo for more nesting
+            let container = this.pageContent.current;
+            let rect = container.getBoundingClientRect();
+            let x = event.clientX - rect.left;
+            let y = event.clientY - rect.top;
 
             this.setState(state => {
                 return {
@@ -107,7 +114,7 @@ class Page extends Component {
         if (compType == 1) {
             component = {
                 ...component,
-                "type" : "panel",
+                "type": "panel",
                 "border": "1px solid black"
             }
         }
@@ -178,25 +185,27 @@ class Page extends Component {
                 <Box>
                     <Box className={this.props.classes.page_content}
                          onMouseDown={this.rightClickMenuOpen}
+                         ref={this.pageContent}
                     >
+                        {this.state.page.components.map(comp => (
+                                <div
+                                    style={{
+                                        position: "absolute",
+                                        height: comp.height,
+                                        width: comp.width,
+                                        top: comp.top,
+                                        left: comp.left,
+                                        border: comp.border,
+                                        "background-color": comp.backgroundColor
+                                    }}
 
-                        {this.state.page.components.map( comp => (
-                            <div
-                                style={{
-                                    position: "absolute",
-                                    height: comp.height,
-                                    width: comp.width,
-                                    top: comp.top,
-                                    left: comp.left,
-                                    border: comp.border,
-                                    "background-color": comp.backgroundColor
-                                }}
+                                >
+                                    <div style={{position: "relative"}} >
 
-                            ></div>
+                                    </div>
+                                </div>
                             )
                         )}
-
-
                     </Box>
 
                     {/* edit page menu */}

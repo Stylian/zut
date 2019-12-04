@@ -15,6 +15,6 @@ public class Panel extends Component {
     private String border;
 
     @Column
-    private String backgroundColor = "rgb(255,255,255, 1)"; // transparent default
+    private String backgroundColor = "rgb(255,255,255, 0)"; // transparent default
 
 }

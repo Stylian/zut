@@ -6,8 +6,6 @@ FilterNoneIcon gone
 multi right clicking should be possible
 
 
-adding panel, maybe make a componentDTO for all components ? ?? ? ??
-
 right click in panel must know it is in there
 
 0.2
