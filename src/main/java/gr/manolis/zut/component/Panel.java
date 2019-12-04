@@ -1,10 +1,11 @@
-package gr.manolis.zut.component.types;
+package gr.manolis.zut.component;
 
 import gr.manolis.zut.component.Component;
 import lombok.Data;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.PrimaryKeyJoinColumn;
 
 @Entity(name = "PANELS")
 @Data

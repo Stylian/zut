@@ -1,6 +1,8 @@
 package gr.manolis.zut.component;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import gr.manolis.zut.page.Page;
 import lombok.Data;
 import lombok.ToString;
@@ -9,10 +11,14 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "type")
+@JsonSubTypes({
+        @JsonSubTypes.Type(value = Panel.class, name = "panel"),
+})
 @Data
 @Entity(name = "COMPONENTS")
 @Inheritance(strategy = InheritanceType.JOINED)
-public class Component {
+public abstract class Component {
 
     @Id
     @GeneratedValue
@@ -46,5 +52,7 @@ public class Component {
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "page_id")
     private Page page;
+
+    public Component() { }
 
 }

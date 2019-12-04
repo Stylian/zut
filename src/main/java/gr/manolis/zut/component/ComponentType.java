@@ -1,4 +1,4 @@
-package gr.manolis.zut.component.types;
+package gr.manolis.zut.component;
 
 public enum ComponentType {
 

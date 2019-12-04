@@ -1,16 +1,14 @@
 package gr.manolis.zut.page;
 
-import gr.manolis.zut.component.Component;
-import gr.manolis.zut.component.ComponentRepository;
-import gr.manolis.zut.component.ComponentService;
+import gr.manolis.zut.component.*;
 import org.apache.log4j.Logger;
 import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.persistence.EntityNotFoundException;
 import javax.validation.constraints.Min;
 import java.util.List;
 
@@ -123,13 +121,10 @@ public class PageController {
     // ----------------------------------------------- COMPONENTS --------------------------------------------------//
 
     @ResponseBody
-    @PostMapping("/{page_id}/components")
+    @PostMapping(value="/{page_id}/components")
     public ResponseEntity<Component> insertComponent(
             @PathVariable("page_id") int pageId,
-            @RequestParam("top") @Min(0) int top,
-            @RequestParam("left") @Min(0) int left,
-            @RequestParam("height") @Min(0) int height,
-            @RequestParam("width") @Min(0) int width
+            @RequestBody Component component
     ) {
 
         // check if page exists in the database
@@ -139,13 +134,6 @@ public class PageController {
         }
 
         Page page = responseEntity.getBody();
-
-        // this is the new component
-        Component component = new Component();
-        component.setLeft(left);
-        component.setTop(top);
-        component.setWidth(width);
-        component.setHeight(height);
 
         Component savedComponent = componentService.addComponentToPage(page, component);
         return new ResponseEntity<>(savedComponent, HttpStatus.CREATED);

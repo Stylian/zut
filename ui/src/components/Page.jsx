@@ -91,49 +91,65 @@ class Page extends Component {
         });
     }
 
-    insertComponent = (e) => {
+    insertComponentHandler = (e) => {
 
         this.rightClickMenuClose();
         let compType = e.currentTarget.dataset.comptype;
 
-        // insert panel
-        if(compType == 1) {
-            fetch("/pages/"+this.state.page.id+ "/components", {
-                method: 'POST',
-                headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-                body: "top=" + this.state.rightClickMenu.y + "&left=" + this.state.rightClickMenu.x
-                    + "&height=100&width=200"
-            })
-                .then(res => res.json())
-                .then(
-                    (result) => {
-                        let newComponent = result;
-                        if (newComponent.id === -1) {
-                            return;
-                        }
-                        // let newPages = [...this.state.pages, newPage];
-                        // this.setState(state => {
-                        //     return {
-                        //         ...state,
-                        //         pages: newPages,
-                        //         addMenu: {
-                        //             dialogOpen: false
-                        //         },
-                        //         tabActive: this.state.pages.length // as it has not updated yet, so that is former size
-                        //     }
-                        // });
-                    },
-                    (error) => {
-                        this.setState(state => {
-                            return {
-                                ...state,
-                                error
-                            }
-                        });
-                    }
-                )
+        let component = {
+            "top": this.state.rightClickMenu.y,
+            "left": this.state.rightClickMenu.x,
+            "height": 200,
+            "width": 300,
+        };
 
+        // insert panel
+        if (compType == 1) {
+            component = {
+                ...component,
+                "type" : "panel",
+                "border": "1px solid black"
+            }
         }
+
+        this.insertComponent(component);
+    }
+
+    insertComponent = (component) => {
+
+        fetch("/pages/" + this.state.page.id + "/components", {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(component)
+        })
+            .then(res => res.json())
+            .then(
+                (result) => {
+                    let newComponent = result;
+                    if (newComponent.id === -1) {
+                        return;
+                    }
+                    // let newPages = [...this.state.pages, newPage];
+                    // this.setState(state => {
+                    //     return {
+                    //         ...state,
+                    //         pages: newPages,
+                    //         addMenu: {
+                    //             dialogOpen: false
+                    //         },
+                    //         tabActive: this.state.pages.length // as it has not updated yet, so that is former size
+                    //     }
+                    // });
+                },
+                (error) => {
+                    this.setState(state => {
+                        return {
+                            ...state,
+                            error
+                        }
+                    });
+                }
+            )
     }
 
     render() {
@@ -163,6 +179,24 @@ class Page extends Component {
                     <Box className={this.props.classes.page_content}
                          onMouseDown={this.rightClickMenuOpen}
                     >
+
+                        {this.state.page.components.map( comp => (
+                            <div
+                                style={{
+                                    position: "absolute",
+                                    height: comp.height,
+                                    width: comp.width,
+                                    top: comp.top,
+                                    left: comp.left,
+                                    border: comp.border,
+                                    "background-color": comp.backgroundColor
+                                }}
+
+                            ></div>
+                            )
+                        )}
+
+
                     </Box>
 
                     {/* edit page menu */}
@@ -174,31 +208,31 @@ class Page extends Component {
                         open={this.state.rightClickMenu.open}
                         onClose={this.rightClickMenuClose}
                     >
-                        <MenuItem data-comptype={1} onClick={this.insertComponent}>
+                        <MenuItem data-comptype={1} onClick={this.insertComponentHandler}>
                             <ListItemIcon>
                                 <FilterNoneIcon/>
                             </ListItemIcon>
                             <ListItemText primary="Insert Panel"/>
                         </MenuItem>
-                        <MenuItem data-comptype={2} onClick={this.insertComponent}>
+                        <MenuItem data-comptype={2} onClick={this.insertComponentHandler}>
                             <ListItemIcon>
                                 <MessageIcon/>
                             </ListItemIcon>
                             <ListItemText primary="Add Label"/>
                         </MenuItem>
-                        <MenuItem data-comptype={3} onClick={this.insertComponent}>
+                        <MenuItem data-comptype={3} onClick={this.insertComponentHandler}>
                             <ListItemIcon>
                                 <ViewListIcon/>
                             </ListItemIcon>
                             <ListItemText primary="Insert Table"/>
                         </MenuItem>
-                        <MenuItem data-comptype={4} onClick={this.insertComponent}>
+                        <MenuItem data-comptype={4} onClick={this.insertComponentHandler}>
                             <ListItemIcon>
                                 <InsertChartIcon/>
                             </ListItemIcon>
                             <ListItemText primary="Insert Graph"/>
                         </MenuItem>
-                        <MenuItem data-comptype={5} onClick={this.insertComponent}>
+                        <MenuItem data-comptype={5} onClick={this.insertComponentHandler}>
                             <ListItemIcon>
                                 <AttachFileIcon/>
                             </ListItemIcon>

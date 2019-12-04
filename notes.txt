@@ -1,12 +1,14 @@
 todo
 
+to add edit mode
+
 FilterNoneIcon gone
 multi right clicking should be possible
-then to add  children comps to react ui
+
 
 adding panel, maybe make a componentDTO for all components ? ?? ? ??
 
-types of components
+right click in panel must know it is in there
 
 0.2
 

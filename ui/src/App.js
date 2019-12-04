@@ -32,6 +32,7 @@ const styles = theme => ({
     },
     page_content: {
         background: palette.color3,
+        position: "relative",
         height: 768
     }
 
