@@ -1,8 +1,18 @@
 todo
 
-todo nested panels/comps
+
+ nested panels/comps
+ -- doing, needs to deal with parent json issue mapping
+
+setting dimensions on panel by mouse drag
+  -- panel drag mode needed
 
 to add edit mode
+-- only then right click works, also resizing
+-- on edit mode a tooltip is displayed on hover of panel to allow to set border and background
+-- publish exits edit mode
+
+tab persistance
 
 FilterNoneIcon gone
 multi right clicking should be possible

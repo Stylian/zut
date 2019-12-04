@@ -42,7 +42,6 @@ public abstract class Component {
     @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL)
     private List<Component> children = new ArrayList<>();
 
-    @JsonIgnore
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "parent_id")
     private Component parent;

@@ -12,7 +12,7 @@ class Panel extends Component {
     render() {
         let panel = this.props.panel;
         return (
-            <div
+            <div data-id={panel.id}
                 style={{
                     position: "absolute",
                     height: panel.height,

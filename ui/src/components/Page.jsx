@@ -65,11 +65,9 @@ class Page extends Component {
                 return false;
             }
 
-            //default//todo for more nesting
-            let container = this.pageContent.current;
-            let rect = container.getBoundingClientRect();
-            let x = event.clientX - rect.left;
-            let y = event.clientY - rect.top;
+            let container = event.target;
+            let x = event.clientX;
+            let y = event.clientY;
 
             this.setState(state => {
                 return {
@@ -79,6 +77,7 @@ class Page extends Component {
                         open: true,
                         x: x,
                         y: y,
+                        container: container
                     }
                 }
             });
@@ -93,7 +92,8 @@ class Page extends Component {
                     ...state.rightClickMenu,
                     open: false,
                     x: 0,
-                    y: 0
+                    y: 0,
+                    container: null
                 }
             }
         });
@@ -101,25 +101,36 @@ class Page extends Component {
 
     insertComponentHandler = (e) => {
 
-        this.rightClickMenuClose();
         let compType = e.currentTarget.dataset.comptype;
 
+        let rect = this.state.rightClickMenu.container.getBoundingClientRect();
+        let x = this.state.rightClickMenu.x - rect.left;
+        let y = this.state.rightClickMenu.y - rect.top;
+        let id = this.state.rightClickMenu.container.dataset.id;
+
+        // parent is the page
+        if( id == undefined) {
+            id = -1;
+        }
+
         let component = {
-            "top": this.state.rightClickMenu.y,
-            "left": this.state.rightClickMenu.x,
-            "height": 200,
-            "width": 300,
+            top: y,
+            left: x,
+            height: 36,
+            width: 36,
         };
 
         // insert panel
         if (compType === "1") {
             component = {
                 ...component,
-                "type": "panel",
-                "border": "1px solid black"
+                parent: {id: parseInt(id)}, //TODO not enough to work
+                type: "panel",
+                border: "1px solid black"
             }
         }
 
+        this.rightClickMenuClose();
         this.insertComponent(component);
     }
 
