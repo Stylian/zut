@@ -12,6 +12,7 @@ import AttachFileIcon from '@material-ui/icons/AttachFile';
 import InsertChartIcon from '@material-ui/icons/InsertChart';
 import MessageIcon from '@material-ui/icons/Message';
 import ViewListIcon from '@material-ui/icons/ViewList';
+import Panel from "./Panel";
 
 class Page extends Component {
 
@@ -111,7 +112,7 @@ class Page extends Component {
         };
 
         // insert panel
-        if (compType == 1) {
+        if (compType === "1") {
             component = {
                 ...component,
                 "type": "panel",
@@ -136,17 +137,10 @@ class Page extends Component {
                     if (newComponent.id === -1) {
                         return;
                     }
-                    // let newPages = [...this.state.pages, newPage];
-                    // this.setState(state => {
-                    //     return {
-                    //         ...state,
-                    //         pages: newPages,
-                    //         addMenu: {
-                    //             dialogOpen: false
-                    //         },
-                    //         tabActive: this.state.pages.length // as it has not updated yet, so that is former size
-                    //     }
-                    // });
+                    this.setState(state => {
+                        state.page.components[state.page.components.length] = newComponent;
+                        return state;
+                    });
                 },
                 (error) => {
                     this.setState(state => {
@@ -187,23 +181,8 @@ class Page extends Component {
                          onMouseDown={this.rightClickMenuOpen}
                          ref={this.pageContent}
                     >
-                        {this.state.page.components.map(comp => (
-                                <div
-                                    style={{
-                                        position: "absolute",
-                                        height: comp.height,
-                                        width: comp.width,
-                                        top: comp.top,
-                                        left: comp.left,
-                                        border: comp.border,
-                                        "background-color": comp.backgroundColor
-                                    }}
-
-                                >
-                                    <div style={{position: "relative"}} >
-
-                                    </div>
-                                </div>
+                        {this.state.page.components.map((comp,k) => (
+                                <Panel key={k} panel={comp}/>
                             )
                         )}
                     </Box>

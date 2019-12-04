@@ -1,5 +1,7 @@
 todo
 
+todo nested panels/comps
+
 to add edit mode
 
 FilterNoneIcon gone
