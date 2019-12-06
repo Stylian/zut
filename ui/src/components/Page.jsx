@@ -117,8 +117,8 @@ class Page extends Component {
         let component = {
             top: y,
             left: x,
-            height: 36,
-            width: 36,
+            height: 100,
+            width: 200,
         };
 
         // insert panel
@@ -128,6 +128,7 @@ class Page extends Component {
                 type: "panel",
                 border: "1px solid black"
             }
+
         }
 
         this.rightClickMenuClose();
@@ -162,7 +163,7 @@ class Page extends Component {
                             state.page.components[state.page.components.length] = newComponent;
                         }else {
                             let parentIndex = state.page.components.findIndex( comp => comp.id === parentId);
-                            state.page.components[parentIndex].children[state.page.components[parentIndex].children.length] = new Component;
+                            state.page.components[parentIndex].children[state.page.components[parentIndex].children.length] = newComponent;
                         }
                         return state;
                     });

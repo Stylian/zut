@@ -1,11 +1,13 @@
 todo
 
+setting dimensions on panel by mouse drag
+  -- panel dragging js todo
+  -- real time updating
 
  nested panels/comps
- -- doing, needs to deal with parent json issue mapping
+ -- not handling more than 1 level deep, maybe handle it at component level? maybe inheritance?
+-- maybe component selector class instead?
 
-setting dimensions on panel by mouse drag
-  -- panel drag mode needed
 
 to add edit mode
 -- only then right click works, also resizing
