@@ -106,11 +106,12 @@ class Page extends Component {
         let rect = this.state.rightClickMenu.container.getBoundingClientRect();
         let x = this.state.rightClickMenu.x - rect.left;
         let y = this.state.rightClickMenu.y - rect.top;
-        let id = this.state.rightClickMenu.container.dataset.id;
+        let parentId = this.state.rightClickMenu.container.dataset.id;
 
-        // parent is the page
-        if( id == undefined) {
-            id = -1;
+        if( parentId == undefined) {
+            parentId = -1;
+        }else {
+            parentId = parseInt(parentId);
         }
 
         let component = {
@@ -124,19 +125,27 @@ class Page extends Component {
         if (compType === "1") {
             component = {
                 ...component,
-                parent: {id: parseInt(id)}, //TODO not enough to work
                 type: "panel",
                 border: "1px solid black"
             }
         }
 
         this.rightClickMenuClose();
-        this.insertComponent(component);
+        this.insertComponent(component, parentId);
     }
 
-    insertComponent = (component) => {
+    insertComponent = (component, parentId) => {
 
-        fetch("/pages/" + this.state.page.id + "/components", {
+        let url = "";
+        if(parentId < 1) {
+            // add to page
+            url= "/pages/" + this.state.page.id + "/components";
+        }else {
+            //add to component
+            url= "components/" + parentId + "/children";
+        }
+
+        fetch(url, {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify(component)
@@ -149,7 +158,12 @@ class Page extends Component {
                         return;
                     }
                     this.setState(state => {
-                        state.page.components[state.page.components.length] = newComponent;
+                        if(parentId < 1) {
+                            state.page.components[state.page.components.length] = newComponent;
+                        }else {
+                            let parentIndex = state.page.components.findIndex( comp => comp.id === parentId);
+                            state.page.components[parentIndex].children[state.page.components[parentIndex].children.length] = new Component;
+                        }
                         return state;
                     });
                 },

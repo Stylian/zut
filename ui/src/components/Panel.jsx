@@ -1,4 +1,5 @@
 import React, {Component} from "react";
+import {Box} from "@material-ui/core";
 
 
 class Panel extends Component {
@@ -25,6 +26,11 @@ class Panel extends Component {
 
             >
                 <div style={{position: "relative"}} >
+
+                    {this.props.panel.children.map((comp,k) => (
+                            <Panel key={k} panel={comp}/>
+                        )
+                    )}
 
                 </div>
             </div>

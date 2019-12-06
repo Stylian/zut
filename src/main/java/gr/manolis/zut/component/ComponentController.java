@@ -1,5 +1,6 @@
 package gr.manolis.zut.component;
 
+import gr.manolis.zut.page.Page;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,6 +18,9 @@ public class ComponentController {
 
     @Autowired
     private ComponentRepository componentRepository;
+
+    @Autowired
+    private ComponentService componentService;
 
     @GetMapping("/")
     public ResponseEntity<List<Component>> getAllControllers() {
@@ -89,4 +93,25 @@ public class ComponentController {
         logger.info("deleteComponent replies...");
         return new ResponseEntity<>(componentId, HttpStatus.OK);
     }
+
+
+    @ResponseBody
+    @PostMapping(value="/{component_id}/children")
+    public ResponseEntity<Component> insertComponent(
+            @PathVariable("component_id") int parentId,
+            @RequestBody Component component
+    ) {
+
+        // check if page exists in the database
+        ResponseEntity<Component> responseEntity = getComponent(parentId);
+        if (!HttpStatus.OK.equals(responseEntity.getStatusCode())) {
+            return new ResponseEntity<>(null, responseEntity.getStatusCode());
+        }
+
+        Component parent = responseEntity.getBody();
+
+        Component savedComponent = componentService.addComponentToComponent(parent, component);
+        return new ResponseEntity<>(savedComponent, HttpStatus.CREATED);
+    }
+
 }
