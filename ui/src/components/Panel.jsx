@@ -30,14 +30,25 @@ class Panel extends Component {
     }
 
     startResizing = (e) => {
+        let resizedirection = e.currentTarget.dataset.resizedirection;
+        let doX = false;
+        let doY = false;
+        if(resizedirection === "bottom") {
+            doY = true;
+        }else if( resizedirection === "right") {
+            doX = true;
+        }else if( resizedirection === "bottom-right") {
+            doX = true;
+            doY = true;
+        }
         let x = e.clientX;
         let y = e.clientY;
         this.setState(state => {
             return {
                 ...state,
                 resize: {
-                    doX: true,
-                    doY: true,
+                    doX: doX,
+                    doY: doY,
                     x: x,
                     y: y
                 }
@@ -47,17 +58,28 @@ class Panel extends Component {
     }
 
     doResizing = (e) => {
+        let x = 0;
+        let y = 0;
         if(this.state.resize.doX) {
-            let x = e.clientX;
-            let y = e.clientY;
+            x = e.clientX;
+        }
+        if(this.state.resize.doY) {
+            y = e.clientY;
+        }
+        if(this.state.resize.doX ||
+            this.state.resize.doY) {
+
             this.setState(state => {
                 return {
                     ...state,
-                    height: state.height + y - state.resize.y,
-                    width: state.width + x - state.resize.x,
+                    height: this.state.resize.doY?
+                        state.height + y - state.resize.y :
+                        state.height,
+                    width: this.state.resize.doX ?
+                        state.width + x - state.resize.x :
+                        state.width,
                     resize: {
-                        doX: true,
-                        doY: true,
+                        ...state.resize,
                         x: x,
                         y: y
                     }
@@ -162,7 +184,7 @@ class Panel extends Component {
                                      "e-resize" : "default",
                                  zIndex: 10
                              }}
-                             data-whichborder={"right"}
+                             data-resizedirection={"right"}
                              onMouseDown={this.startResizing}
                              onMouseMove={this.doResizing}
                              onMouseUp={this.stopResizing}
@@ -179,7 +201,7 @@ class Panel extends Component {
                                      "s-resize" : "default",
                                  zIndex: 10
                              }}
-                             data-whichborder={"bottom"}
+                             data-resizedirection={"bottom"}
                              onMouseDown={this.startResizing}
                              onMouseMove={this.doResizing}
                              onMouseUp={this.stopResizing}
@@ -196,7 +218,7 @@ class Panel extends Component {
                         ></div>) : (null)}
                         {this.state.editMode?
                             (<div className="crop-bottom-right-corner-outer"
-                                    data-whichborder={"bottom-right"}
+                                    data-resizedirection={"bottom-right"}
                                     onMouseDown={this.startResizing}
                                     onMouseMove={this.doResizing}
                                     onMouseUp={this.stopResizing}
