@@ -208,7 +208,7 @@ class Page extends Component {
                          ref={this.pageContent}
                     >
                         {this.state.page.components.map((comp,k) => (
-                                <Panel key={k} panel={comp}/>
+                                <Panel key={k} panel={comp} />
                             )
                         )}
                     </Box>

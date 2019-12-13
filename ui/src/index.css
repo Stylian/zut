@@ -18,29 +18,33 @@ body{
 .crop:hover .crop-line {
     border-color: rgba(204,31,48,1);
 }
-.crop .crop-top-line {
-    top: 0;
+.crop .crop-bottom-line-inner {
+    bottom: 0;
     left: 0;
     right: 0;
-    height: 5px; /* 5px for the mouse cursor update size */
+    height: 20px;
+    margin-right: 20px;
 }
 .crop .crop-bottom-line {
     bottom: 0;
     left: 0;
     right: 0;
-    height: 5px; /* 5px for the mouse cursor update size */
+    height: 10px;
+    margin-right: 10px;
 }
-.crop .crop-left-line {
+.crop .crop-right-line-inner {
     top: 0;
-    left: 0;
+    right: 0;
     bottom: 0;
-    width: 5px; /* 5px for the mouse cursor update size */
+    width: 20px;
+    margin-bottom: 20px;
 }
 .crop .crop-right-line {
     top: 0;
     right: 0;
     bottom: 0;
-    width: 5px; /* 5px for the mouse cursor update size */
+    width: 10px;
+    margin-bottom: 10px;
 }
 .crop .crop-corner {
     position: absolute;
@@ -52,25 +56,18 @@ body{
     opacity: 0;
     transition: all 0.25s;
 }
-.crop .crop-top-left-corner {
-    top: -3px;
-    left: -3px;
-    cursor: nw-resize;
-}
-.crop .crop-top-right-corner {
-    top: -3px;
-    right: -3px;
-    cursor: ne-resize;
-}
-.crop .crop-bottom-left-corner {
-    bottom: -3px;
-    left: -3px;
-    cursor: sw-resize;
-}
 .crop .crop-bottom-right-corner {
-    bottom: -3px;
-    right: -3px;
+    bottom: 7px;
+    right: 7px;
+}
+.crop-bottom-right-corner-outer {
+    bottom: 0;
+    right: 0;
+    position: absolute;
+    width: 20px;
+    height: 20px;
     cursor: se-resize;
+    zIndex: 20;
 }
 .crop:hover .crop-corner {
     opacity: 1;
