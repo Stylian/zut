@@ -1,8 +1,9 @@
 todo
 
-setting dimensions on panel by mouse drag
-  -- panel dragging js todo
-  -- real time updating
+resizing and moving
+  -- some draging issuew with clearing flags, also sizes to change
+  -- panel toolbar for move ?
+  -- real time updating db ? or save
 
  nested panels/comps
  -- not handling more than 1 level deep, maybe handle it at component level? maybe inheritance?

@@ -33,11 +33,11 @@ class Panel extends Component {
         let resizedirection = e.currentTarget.dataset.resizedirection;
         let doX = false;
         let doY = false;
-        if(resizedirection === "bottom") {
+        if (resizedirection === "bottom") {
             doY = true;
-        }else if( resizedirection === "right") {
+        } else if (resizedirection === "right") {
             doX = true;
-        }else if( resizedirection === "bottom-right") {
+        } else if (resizedirection === "bottom-right") {
             doX = true;
             doY = true;
         }
@@ -60,19 +60,19 @@ class Panel extends Component {
     doResizing = (e) => {
         let x = 0;
         let y = 0;
-        if(this.state.resize.doX) {
+        if (this.state.resize.doX) {
             x = e.clientX;
         }
-        if(this.state.resize.doY) {
+        if (this.state.resize.doY) {
             y = e.clientY;
         }
-        if(this.state.resize.doX ||
+        if (this.state.resize.doX ||
             this.state.resize.doY) {
 
             this.setState(state => {
                 return {
                     ...state,
-                    height: this.state.resize.doY?
+                    height: this.state.resize.doY ?
                         state.height + y - state.resize.y :
                         state.height,
                     width: this.state.resize.doX ?
@@ -118,7 +118,7 @@ class Panel extends Component {
     }
 
     doMoving = (e) => {
-        if(this.state.move.do) {
+        if (this.state.move.do) {
             let x = e.clientX;
             let y = e.clientY;
             this.setState(state => {
@@ -148,7 +148,8 @@ class Panel extends Component {
 
 
     render() {
-        let border = this.state.editMode ? "1px rgba(204,31,48,1) solid" : this.props.panel.border;
+        let editBorder = this.state.editMode ? "1px rgba(204,31,48,1) solid" : this.props.panel.border;
+       let border = this.props.panel.border;
         return (
             <div data-id={this.props.panel.id}
                  style={{
@@ -169,8 +170,8 @@ class Panel extends Component {
                          style={{
                              width: "100%",
                              height: "100%",
-                             cursor: this.state.editMode?
-                                  "move" : "default"
+                             cursor: this.state.editMode ?
+                                 "move" : "default"
                          }}
                          onMouseDown={this.startMoving}
                          onMouseMove={this.doMoving}
@@ -180,7 +181,7 @@ class Panel extends Component {
 
                         <div className="crop-line crop-right-line-inner"
                              style={{
-                                 cursor: this.state.editMode?
+                                 cursor: this.state.editMode ?
                                      "e-resize" : "default",
                                  zIndex: 10
                              }}
@@ -192,12 +193,12 @@ class Panel extends Component {
                         ></div>
                         <div className="crop-line crop-right-line"
                              style={{
-                                 borderLeft: border,
+                                 borderLeft: editBorder,
                              }}
                         ></div>
                         <div className="crop-line crop-bottom-line-inner"
                              style={{
-                                 cursor: this.state.editMode?
+                                 cursor: this.state.editMode ?
                                      "s-resize" : "default",
                                  zIndex: 10
                              }}
@@ -209,27 +210,41 @@ class Panel extends Component {
                         ></div>
                         <div className="crop-line crop-bottom-line"
                              style={{
-                                 borderTop: border
+                                 borderTop: editBorder
                              }}
                         ></div>
 
-                        {this.state.editMode?
+                        {this.state.editMode ?
                             (<div className="crop-corner crop-bottom-right-corner"
-                        ></div>) : (null)}
-                        {this.state.editMode?
+                            ></div>) : (null)}
+                        {this.state.editMode ?
                             (<div className="crop-bottom-right-corner-outer"
-                                    data-resizedirection={"bottom-right"}
-                                    onMouseDown={this.startResizing}
-                                    onMouseMove={this.doResizing}
-                                    onMouseUp={this.stopResizing}
-                                    onMouseLeave={this.stopResizing}
-                        ></div>) : (null)}
-                    </div>
+                                  data-resizedirection={"bottom-right"}
+                                  onMouseDown={this.startResizing}
+                                  onMouseMove={this.doResizing}
+                                  onMouseUp={this.stopResizing}
+                                  onMouseLeave={this.stopResizing}
+                            ></div>) : (null)}
 
-                    {this.props.panel.children.map((comp, k) => (
-                            <Panel key={k} panel={comp}/>
-                        )
-                    )}
+                        <div className={"panel_content"}
+                             style={{
+                                 position: "absolute",
+                                 top: 0,
+                                 left: 0,
+                                 bottom: 0,
+                                 right: 0,
+                                 marginBottom: 10,
+                                 marginRight: 10,
+                                 borderTop: border,
+                                 borderLeft: border,
+                             }}
+                        >
+                            {this.props.panel.children.map((comp, k) => (
+                                    <Panel key={k} panel={comp}/>
+                                )
+                            )}
+                        </div>
+                    </div>
 
                 </div>
             </div>
