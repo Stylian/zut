@@ -8,7 +8,6 @@ body{
 .crop {
     position: absolute;
     transition: all 0.25s;
-    cursor: move;
 }
 
 .crop .crop-line {

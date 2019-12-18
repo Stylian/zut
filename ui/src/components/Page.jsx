@@ -65,7 +65,7 @@ class Page extends Component {
                 return false;
             }
 
-            let container = event.target;
+            let container = event.target ;// need to add this here -> .closest("component_container");
             let x = event.clientX;
             let y = event.clientY;
 

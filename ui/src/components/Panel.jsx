@@ -20,7 +20,7 @@ class Panel extends Component {
     }
 
     relocate = (x, y) => {
-        this.setState( state => {
+        this.setState(state => {
             return {
                 ...state,
                 top: y,
@@ -30,7 +30,7 @@ class Panel extends Component {
     }
 
     resize = (x, y) => {
-        this.setState( state => {
+        this.setState(state => {
             return {
                 ...state,
                 height: y,
@@ -43,7 +43,7 @@ class Panel extends Component {
         let editBorder = this.state.editMode ? "1px rgba(204,31,48,1) solid" : this.props.panel.border;
         let border = this.props.panel.border;
         return (
-            <div data-id={this.props.panel.id}
+            <div className="component_container" data-id={this.props.panel.id}
                  style={{
                      position: "absolute",
                      height: this.state.height,
@@ -64,13 +64,24 @@ class Panel extends Component {
                     />
 
                 </div>
-                <Resizer
-                    top={this.state.top}
-                    left={this.state.left}
-                    width={this.state.width}
-                    height={this.state.height}
-                    resize={this.resize}
-                />
+                <div className="container" style={{width: "100%", height: "100%"}}>
+
+                    <div className="panel_content"  style={{
+                        position: "absolute",
+                        width: "100%",
+                        height: "100%",
+                    }}>
+
+                    </div>
+
+                    <Resizer
+                        top={this.state.top}
+                        left={this.state.left}
+                        width={this.state.width}
+                        height={this.state.height}
+                        resize={this.resize}
+                    />
+                </div>
             </div>
         );
     }
