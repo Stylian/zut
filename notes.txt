@@ -2,7 +2,6 @@ todo
 
 resizing and moving
   -- some draging issuew with clearing flags, also sizes to change
-  -- panel toolbar for move ?
   -- real time updating db ? or save
 
  nested panels/comps
