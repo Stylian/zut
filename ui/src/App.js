@@ -34,7 +34,10 @@ const styles = theme => ({
         background: palette.color3,
         position: "relative",
         height: 768
-    }
+    },
+    component_toolbar: {
+        background: "rgb(0,0,0,0.1)",
+    },
 
 });
 

@@ -10,8 +10,6 @@ class Resizer extends Component {
         this.state = {
             height: this.props.height,
             width: this.props.width,
-            top: this.props.top,
-            left: this.props.left,
             resize: {
                 doX: false,
                 doY: false,

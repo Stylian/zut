@@ -50,7 +50,7 @@ class Mover extends Component {
                 }
             });
 
-            this.props.relocate(this.state.left, this.state.top);
+            this.props.relocate(this.props.id, this.state.left, this.state.top);
         }
     }
     stopMoving = (e) => {

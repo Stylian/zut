@@ -1,6 +1,8 @@
 import React, {Component} from "react";
 import Mover from "./Mover";
 import Resizer from "./Resizer";
+import EditIcon from "@material-ui/icons/Edit";
+import Button from "@material-ui/core/Button";
 
 
 class Panel extends Component {
@@ -56,12 +58,15 @@ class Panel extends Component {
 
             >
 
-                <div>
+                <div className={this.props.classes.component_toolbar}>
                     <Mover
                         top={this.state.top}
                         left={this.state.left}
                         relocate={this.relocate}
                     />
+                    <Button title={"edit component"} onClick={this.props.editOpen}>
+                        <EditIcon/>
+                    </Button>
 
                 </div>
                 <div className="container" style={{width: "100%", height: "100%"}}>
@@ -75,8 +80,6 @@ class Panel extends Component {
                     </div>
 
                     <Resizer
-                        top={this.state.top}
-                        left={this.state.left}
                         width={this.state.width}
                         height={this.state.height}
                         resize={this.resize}

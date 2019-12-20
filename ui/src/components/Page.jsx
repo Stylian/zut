@@ -4,7 +4,16 @@ import EditIcon from '@material-ui/icons/Edit';
 import PublishIcon from '@material-ui/icons/Publish';
 import LockIcon from '@material-ui/icons/Lock';
 import SaveIcon from '@material-ui/icons/Save';
-import {Box, ListItemIcon, ListItemText} from "@material-ui/core";
+import {
+    Box,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
+    ListItemIcon,
+    ListItemText, Paper,
+    TextField
+} from "@material-ui/core";
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
 import FilterNoneIcon from "@material-ui/core/SvgIcon/SvgIcon";
@@ -13,6 +22,8 @@ import InsertChartIcon from '@material-ui/icons/InsertChart';
 import MessageIcon from '@material-ui/icons/Message';
 import ViewListIcon from '@material-ui/icons/ViewList';
 import Panel from "./Panel";
+import Mover from "./Mover";
+import Resizer from "./Resizer";
 
 class Page extends Component {
 
@@ -28,6 +39,10 @@ class Page extends Component {
                 y: 0,
                 open: false,
             },
+            editComponentDialog: {
+                dialogOpen: false,
+                height: 0
+            }
         };
 
         this.pageContent = React.createRef();
@@ -179,6 +194,68 @@ class Page extends Component {
             )
     }
 
+    // create page dialog handlers
+    changeField = (field, dialogType) => (event) => {
+        let value = event.target.value;
+        if (value < 0) {
+            return;
+        }
+
+        this.setState(state => {
+            return {
+                ...state,
+                [dialogType]: {
+                    ...state[dialogType],
+                    [field]: value,
+                }
+            }
+        });
+
+    }
+
+    editOpenDialog = () => {
+        this.setState(state => {
+            return {
+                ...state,
+                editComponentDialog: {
+                    dialogOpen: true
+                }
+            }
+        });
+    }
+
+    closeEditCompDialog = () => {
+        this.setState(state => {
+            return {
+                ...state,
+                editComponentDialog: {
+                    dialogOpen: false
+                }
+            }
+        });
+    }
+
+    relocate = (id, x, y) => {
+
+        let compIndex = this.state.page.components.findIndex( comp => comp.id === id);
+
+        this.setState(state => {
+            state.page.components[compIndex].top = y;
+            state.page.components[compIndex].left = x;
+            return state;
+        });
+    }
+
+    resize = (x, y) => {
+        this.setState(state => {
+            return {
+                ...state,
+                height: y,
+                width: x
+            }
+        })
+    }
+
     render() {
         return this.state.isLoaded ? (
             <Box>
@@ -208,12 +285,53 @@ class Page extends Component {
                          ref={this.pageContent}
                     >
                         {this.state.page.components.map((comp,k) => (
-                                <Panel key={k} panel={comp} />
+                            <div className="component_container" data-id={comp.id}
+                                 style={{
+                                     position: "absolute",
+                                     height: comp.height,
+                                     width: comp.width,
+                                     top: comp.top,
+                                     left: comp.left,
+                                     backgroundColor: comp.backgroundColor,
+                                     border: comp.border
+                                 }}
+
+                            >
+
+                                <div className={this.props.classes.component_toolbar}>
+                                    <Mover
+                                        id={comp.id}
+                                        top={comp.top}
+                                        left={comp.left}
+                                        relocate={this.relocate}
+                                    />
+                                    <Button title={"edit component"} onClick={this.props.editOpen}>
+                                        <EditIcon/>
+                                    </Button>
+
+                                </div>
+                                <div className="container" style={{width: "100%", height: "100%"}}>
+
+                                    <div className="panel_content"  style={{
+                                        position: "absolute",
+                                        width: "100%",
+                                        height: "100%",
+                                    }}>
+
+                                    </div>
+
+                                    <Resizer
+                                        width={comp.width}
+                                        height={comp.height}
+                                        resize={this.resize}
+                                    />
+                                </div>
+                            </div>
                             )
                         )}
                     </Box>
 
-                    {/* edit page menu */}
+                    {/* right click on page menu */}
                     <Menu
                         id="simple-menu"
                         anchorReference="anchorPosition"
@@ -253,6 +371,38 @@ class Page extends Component {
                             <ListItemText primary="Attach File"/>
                         </MenuItem>
                     </Menu>
+
+                    {/*edit component dialog*/}
+                    <Dialog open={this.state.editComponentDialog.dialogOpen} onClose={this.closeEditCompDialog}
+                            aria-labelledby="form-dialog-title">
+                        <DialogTitle id="form-dialog-title">edit component</DialogTitle>
+                        <DialogContent>
+                            <TextField
+                                autoFocus
+                                required
+                                error={this.state.editComponentDialog.height < 24}
+                                margin="dense"
+                                id="height"
+                                label="height"
+                                type="text"
+                                fullWidth
+                                value={this.state.editComponentDialog.height}
+                                onChange={this.changeField("height", "editComponentDialog")}
+                            />
+                        </DialogContent>
+                        <DialogActions>
+                            <Button
+                                onClick={this.updateComponent}
+                                color="primary"
+                            >
+                                Update
+                            </Button>
+                            <Button onClick={this.closeEditCompDialog} color="primary">
+                                Cancel
+                            </Button>
+                        </DialogActions>
+                    </Dialog>
+
                 </Box>
 
             </Box>

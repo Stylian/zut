@@ -1,5 +1,11 @@
 todo
 
+ZUT freeze!
+page will become a god component to solve the panel resizing/moving issues
+maybe come back with redux in the future?
+
+
+
 resizing and moving
   -- some draging issuew with clearing flags, also sizes to change
   -- real time updating db ? or save
@@ -23,5 +29,7 @@ multi right clicking should be possible
 right click in panel must know it is in there
 
 0.2
+
+deleting page does not refresh page container
 
 should be asked first before deleting page
